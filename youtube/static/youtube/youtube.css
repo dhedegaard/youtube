@@ -1,0 +1,38 @@
+.item {
+    padding: 5px;
+}
+
+div.thumbnail {
+    position: relative;
+    margin-bottom: 0;
+}
+
+div.thumbnail img {
+    max-width: 100%;
+    margin-bottom: 5px;
+}
+
+div.thumbnail .duration {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background-color: black;
+    color: white;
+    opacity: 0.8;
+    border-radius: 3px;
+    padding: 3px;
+}
+
+div.item .uploader {
+    font-size: small;
+    margin: 0 5px;
+}
+
+div.item .viewcount {
+    margin: 0 5px;
+}
+
+.title {
+    padding: 5px;
+    font-weight: bold;
+}
