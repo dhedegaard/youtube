@@ -36,3 +36,9 @@ div.item .viewcount {
     padding: 5px;
     font-weight: bold;
 }
+
+.nowrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

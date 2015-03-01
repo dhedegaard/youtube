@@ -1,5 +1,6 @@
 {% load static %}
 {% load pretty_duration %}
+{% load endless %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -17,6 +18,7 @@
     </head>
     <body>
         <div class="container">
+            {% paginate 200 videos %}
             {% for video in videos %}
                 {% if forloop.index|divisibleby:'6' or forloop.first %}<div class="row">{% endif %}
                 <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center item" title="{{ video.description }}">
@@ -26,7 +28,7 @@
                             <img src="{{ video.get_thumbnail }}" />
                         </div>
                     </a>
-                    <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" class="title text-left" title="{{ video.title }}">
+                    <div class="title nowrap text-left" title="{{ video.title }}">
                         <small>
                         {{ video.title }}
                         </small>
@@ -45,8 +47,8 @@
                         views
                         </small>
                     </div>
-                    <div class="uploader text-left">
-                        <a href="{{ item.uploader.url }}" target="_blank">
+                    <div class="uploader nowrap text-left">
+                        <a href="{{ item.uploader.url }}" target="_blank" title="{{ video.uploader.author }}">
                             {{ video.uploader.author }}
                         </a>
                         <br />

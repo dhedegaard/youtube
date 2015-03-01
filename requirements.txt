@@ -1,3 +1,4 @@
 Django==1.7.5
 python-dateutil==2.4.0
 requests==2.3.0
+django-endless-pagination==2.0

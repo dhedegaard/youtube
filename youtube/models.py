@@ -55,15 +55,27 @@ class VideoQuerySet(models.QuerySet):
                 category=category,
                 description=row['description'],
                 duration=row['duration'],
-                rating=row['rating'],
-                like_count=row['likeCount'],
-                rating_count=row['ratingCount'],
-                view_count=row['viewCount'],
-                favorite_count=row['favoriteCount'],
-                comment_count=row['commentCount'],
+                rating=row.get('rating', 0.0),
+                like_count=row.get('likeCount', 0),
+                rating_count=row.get('ratingCount', 0),
+                view_count=row.get('viewCount', 0),
+                favorite_count=row.get('favoriteCount', 0),
+                comment_count=row.get('commentCount', 0),
                 uploaded=dateutil.parser.parse(row['uploaded']),
                 updated=dateutil.parser.parse(row['updated']),
             )
+        else:
+            video.title = row['title']
+            video.description = row['description']
+            video.rating = row.get('rating', 0.0)
+            video.like_count = row.get('likeCount', 0)
+            video.rating_count = row.get('ratingCount', 0)
+            video.view_count = row.get('viewCount', 0)
+            video.favorite_count = row.get('favoriteCount', 0)
+            video.comment_count = row.get('commentCount', 0)
+            video.updated = dateutil.parser.parse(row['updated'])
+            video.save()
+
         return video
 
 

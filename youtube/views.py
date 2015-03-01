@@ -5,5 +5,5 @@ from .models import Video
 
 def index(request):
     return render(request, 'youtube/index.html', {
-        'videos': Video.objects.all(),
+        'videos': Video.objects.prefetch_related('uploader').all(),
     })
