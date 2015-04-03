@@ -10,7 +10,7 @@ from .forms import AddChannelForm
 
 def index(request):
     return render(request, 'youtube/index.html', {
-        'videos': Video.objects.prefetch_related('uploader').all(),
+        'videos': Video.objects.prefetch_related('uploader'),
     })
 
 
@@ -21,7 +21,7 @@ def admin(request):
     else:
         form = AddChannelForm()
     return render(request, 'youtube/admin.html', {
-        'channels': Channel.objects.order_by('title'),
+        'channels': Channel.objects.prefetch_related('videos').order_by('title'),
         'form': form,
     })
 

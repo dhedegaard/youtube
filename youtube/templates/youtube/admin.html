@@ -52,7 +52,7 @@
             </a>
         </td>
         <td>
-            {{ channel.videos.count }}
+            {{ channel.videos.all|length }}
         </td>
         <td>
             {{ channel.created|date }}
