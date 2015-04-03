@@ -1,5 +1,73 @@
 {% extends 'youtube/base.html' %}
 
 {% block content %}
-{{videos }}
+
+<div class="row">
+    <div class="col-md-6">
+        <h3>Manage youtube</h3>
+    </div>
+    <div class="col-md-6 text-right">
+
+        <form method="POST" action="{% url 'channel-add' %}"
+              class="form form-inline add-channel-form inline">
+            {% csrf_token %}
+            <div class="input-group">
+                <input type="text" class="form-control input-sm" name="{{ form.channel.html_name }}"
+                       id="form.channel.auto_id }}" value="{{ form.channel.value|default:'' }}"
+                       {% if request.method == 'POST' %}autofocus{% endif %}
+                       placeholder="URL to channel or direct author name" />
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="glyphicon glyphicon-plus"></i>
+                        Add channel
+                    </button>
+                </span>
+            </div>
+            {% if form.channel.errors %}
+            <div class="help-block">
+                {{ form.channel.errors.0 }}
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+
+{% if channels %}
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Channel</th>
+            <th>Number of videos</th>
+            <th></th>
+        </tr>
+    </thead>
+    {% for channel in channels %}
+    <tr>
+        <td>
+            <a href="{{ channel.url }}">
+                {{ channel.title }}
+            </a>
+        </td>
+        <td>
+            {{ channel.videos.count }}
+        </td>
+        <td class="text-right">
+            <form class="form form-inline inline" method="POST"
+                action="{% url 'channel-delete' channelid=channel.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to remove the channel ?')">
+                    <i class="glyphicon glyphicon-trash"></i>
+                    Remove
+                </button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<div class="alert alert-warning">
+    There are no channels in the system.
+</div>
+{% endif %}
 {% endblock %}

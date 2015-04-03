@@ -2,6 +2,7 @@ import logging
 
 from django.core.management import BaseCommand
 from django.db import transaction
+from django.utils import timezone
 
 from ...models import Channel
 
@@ -25,6 +26,8 @@ class Command(BaseCommand):
                 channel.update_channel_info()
                 # Fetch data about videos on the given channel.
                 channel.fetch_videos()
+                channel.updated = timezone.now()
+                channel.save()
 
         # All done
         logger.info('Done')

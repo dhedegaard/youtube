@@ -43,3 +43,11 @@ div.item .viewcount {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.add-channel-form {
+    padding-top: 10px;
+}
+
+.inline {
+    display: inline;
+}
