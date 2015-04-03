@@ -1,11 +1,14 @@
 from django.conf.urls import patterns, include, url
-from django.contrib import admin
 
 urlpatterns = patterns('',
-    url(r'^$', 'youtube.views.index'),
-    # Examples:
-    # url(r'^$', 'youtube.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
-
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', 'youtube.views.index', name='index'),
+    url(r'^admin/$', 'youtube.views.admin', name='admin'),
+    url(r'^login/$', 'django.contrib.auth.views.login', {
+        'template_name': 'youtube/login.html',
+        'current_app': 'youtube',
+    }, name='login'),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {
+        'next_page': '/',
+        'current_app': 'youtube',
+    }, name='logout'),
 )

@@ -120,3 +120,6 @@ LOGGING = {
         },
     },
 }
+
+LOGIN_REDIRECT_URL = '/admin/'
+LOGIN_URL = '/login/'
