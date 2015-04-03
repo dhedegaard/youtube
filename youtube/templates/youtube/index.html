@@ -33,8 +33,8 @@
                         </small>
                     </div>
                     <div class="text-right pull-right text-muted">
-                        <small class="uploaded" data-uploaded="{{ video.uploaded|date:"c" }}" title="{{ video.uploaded|date:'Y-m-d H:i' }}">
-                        {{ video.uploaded|date:'Y-m-d H:i' }}
+                        <small class="uploaded" title="{{ video.uploaded|date:'Y-m-d H:i' }}">
+                        {{ video.uploaded|timesince }}
                         </small>
                         <br />
                         <small class="viewcount">
@@ -47,8 +47,8 @@
                         </small>
                     </div>
                     <div class="uploader nowrap text-left">
-                        <a href="{{ video.uploader.url }}" target="_blank" title="{{ video.uploader.author }}">
-                            {{ video.uploader.author }}
+                        <a href="{{ video.uploader.url }}" target="_blank" title="{{ video.uploader.title }}">
+                            {{ video.uploader.title }}
                         </a>
                         <br />
                         <small>

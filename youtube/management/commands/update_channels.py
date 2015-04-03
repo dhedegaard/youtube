@@ -11,8 +11,20 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         logger.info('Starting')
-        for channel in Channel.objects.all():
-            logger.info('  fetching for channel: %s', channel.author)
+
+        # Fetch the channels.
+        channels = Channel.objects.all()
+        channel_len = len(channels)
+
+        # Iterate on each channel, fetching data as we go along.
+        for idx, channel in enumerate(channels):
+            logger.info('  [%s/%s] fetching for channel: %s',
+                        idx + 1, channel_len, channel.author)
             with transaction.atomic():
-                channel.fetch()
+                # Fetch data for the channel, updating if needed.
+                channel.update_channel_info()
+                # Fetch data about videos on the given channel.
+                channel.fetch_videos()
+
+        # All done
         logger.info('Done')

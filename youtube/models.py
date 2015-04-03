@@ -8,6 +8,7 @@ from django.utils import timezone
 
 class Channel(models.Model):
     author = models.TextField(unique=True)
+    title = models.TextField(default='')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
 
@@ -17,7 +18,20 @@ class Channel(models.Model):
             self.author,
         )
 
-    def fetch(self, force=False):
+    def update_channel_info(self, save=True):
+        resp = requests.get(
+            'https://gdata.youtube.com/feeds/api/users/%s'
+            '?v=2.1&alt=json' % self.author
+        )
+        resp.raise_for_status()
+        resp = resp.json()
+        new_title = resp['entry']['title']['$t']
+        if new_title != self.title:
+            self.title = new_title
+            if save:
+                self.save(update_fields=['title'])
+
+    def fetch_videos(self, force=False):
         resp = requests.get(
             'https://gdata.youtube.com/feeds/api/videos?'
             'author=%s&v=2&orderby=updated&alt=jsonc' % self.author
@@ -86,7 +100,6 @@ class Video(models.Model):
     youtubeid = models.TextField(unique=True)
     uploader = models.ForeignKey(Channel, related_name='videos')
     title = models.TextField(default='')
-    description = models.TextField(default='')
     duration = models.IntegerField(default=0)  # in seconds
     category = models.ForeignKey(Category, related_name='videos')
     rating = models.DecimalField(max_digits=10, decimal_places=8, default=0.0)
@@ -107,6 +120,7 @@ class Video(models.Model):
             'youtubeid': self.youtubeid,
             'quality': quality,
         }
+    description = models.TextField(default='')
 
     @property
     def url(self):
