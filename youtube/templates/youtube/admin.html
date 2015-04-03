@@ -39,6 +39,8 @@
         <tr>
             <th>Channel</th>
             <th>Number of videos</th>
+            <th>First seen</th>
+            <th>Last updated</th>
             <th></th>
         </tr>
     </thead>
@@ -51,6 +53,12 @@
         </td>
         <td>
             {{ channel.videos.count }}
+        </td>
+        <td>
+            {{ channel.created|date }}
+        </td>
+        <td>
+            {{ channel.updated|timesince }} ago
         </td>
         <td class="text-right">
             <form class="form form-inline inline" method="POST"

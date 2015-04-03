@@ -10,7 +10,7 @@
         <a href="{{ video.url }}" target="_blank">
             <div class="thumbnail">
                 <span class="duration">{{ video.duration|pretty_duration }}</span>
-                <img src="{{ video.get_thumbnail }}" />
+                <img class="thumbnail" src="{{ video.get_thumbnail }}" />
             </div>
         </a>
         <div class="title nowrap text-left" title="{{ video.title }}">
