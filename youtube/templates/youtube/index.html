@@ -47,8 +47,8 @@
                         </small>
                     </div>
                     <div class="uploader nowrap text-left">
-                        <a href="{{ video.uploader.url }}" target="_blank" title="{{ video.uploader.title }}">
-                            {{ video.uploader.title }}
+                        <a href="{{ video.uploader.url }}" target="_blank" title="{{ video.uploader.title|default:video.uploader.author }}">
+                            {{ video.uploader.title|default:video.uploader.author }}
                         </a>
                         <br />
                         <small>
