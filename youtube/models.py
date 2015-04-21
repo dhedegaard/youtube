@@ -1,9 +1,6 @@
-import datetime
-
 import requests
 import dateutil.parser
 from django.db import models
-from django.utils import timezone
 
 
 class Channel(models.Model):
@@ -45,6 +42,7 @@ class Channel(models.Model):
         return u'https://www.youtube.com/user/%(author)s/videos' % {
             'author': self.author,
         }
+
 
 class Category(models.Model):
     category = models.TextField(unique=True)
@@ -92,7 +90,6 @@ class VideoQuerySet(models.QuerySet):
             video.save()
 
         return video
-
 
 
 class Video(models.Model):

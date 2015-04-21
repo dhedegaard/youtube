@@ -1,6 +1,7 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns, url
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^$', 'youtube.views.index', name='index'),
     url(r'^admin/$', 'youtube.views.admin', name='admin'),
     url(r'^admin/(?P<channelid>\d+)/delete/$', 'youtube.views.channel_delete',
