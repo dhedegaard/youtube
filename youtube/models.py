@@ -11,6 +11,7 @@ class Channel(models.Model):
     title = models.TextField(default='')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
+    hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
         return u'id: %s, author: %s' % (
