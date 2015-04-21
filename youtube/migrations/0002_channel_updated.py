@@ -15,7 +15,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='channel',
             name='updated',
-            field=models.DateTimeField(default=datetime.datetime(2015, 2, 27, 21, 13, 37, 642777), auto_now_add=True),
+            field=models.DateTimeField(
+                default=datetime.datetime(2015, 2, 27, 21, 13, 37, 642777),
+                auto_now_add=True),
             preserve_default=False,
         ),
     ]

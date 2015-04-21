@@ -13,7 +13,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(
+                    verbose_name='ID', serialize=False, auto_created=True,
+                    primary_key=True)),
                 ('category', models.TextField(unique=True)),
             ],
             options={
@@ -23,7 +25,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Channel',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(
+                    verbose_name='ID', serialize=False, auto_created=True,
+                    primary_key=True)),
                 ('author', models.TextField(unique=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
             ],
@@ -34,12 +38,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Video',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('id', models.AutoField(
+                    verbose_name='ID', serialize=False, auto_created=True,
+                    primary_key=True)),
                 ('youtubeid', models.TextField(unique=True)),
                 ('title', models.TextField(default=b'')),
                 ('description', models.TextField(default=b'')),
                 ('duration', models.IntegerField(default=0)),
-                ('rating', models.DecimalField(default=0.0, max_digits=10, decimal_places=8)),
+                ('rating', models.DecimalField(
+                    default=0.0, max_digits=10, decimal_places=8)),
                 ('rating_count', models.IntegerField(default=0)),
                 ('like_count', models.IntegerField(default=0)),
                 ('view_count', models.IntegerField(default=0)),
@@ -48,8 +55,10 @@ class Migration(migrations.Migration):
                 ('uploaded', models.DateTimeField()),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
-                ('category', models.ForeignKey(related_name='videos', to='youtube.Category')),
-                ('uploader', models.ForeignKey(related_name='videos', to='youtube.Channel')),
+                ('category', models.ForeignKey(
+                    related_name='videos', to='youtube.Category')),
+                ('uploader', models.ForeignKey(
+                    related_name='videos', to='youtube.Channel')),
             ],
             options={
                 'ordering': ['-uploaded'],
