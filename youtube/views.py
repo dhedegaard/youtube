@@ -11,7 +11,7 @@ from .forms import AddChannelForm
 def index(request):
     return render(request, 'youtube/index.html', {
         'videos': (Video.objects.
-                   filter(hidden=False).
+                   filter(uploader__hidden=False).
                    prefetch_related('uploader')),
     })
 
