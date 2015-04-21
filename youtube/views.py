@@ -23,7 +23,9 @@ def admin(request):
     else:
         form = AddChannelForm()
     return render(request, 'youtube/admin.html', {
-        'channels': Channel.objects.prefetch_related('videos').order_by('title'),
+        'channels': (Channel.objects.
+                     prefetch_related('videos').
+                     order_by('hidden', 'title')),
         'form': form,
     })
 
@@ -56,4 +58,16 @@ def channel_add(request):
         u'Added channel under name <b>{0}</b>',
         channel.title))
 
+    return redirect('admin')
+
+
+@require_POST
+@login_required
+def toggle_hidden(request, channelid):
+    channel = get_object_or_404(Channel, pk=channelid)
+    channel.hidden = not channel.hidden
+    channel.save(update_fields=['hidden'])
+    messages.success(request, format_html(
+        u'Visibility of channel <b>{0}</b> changed.',
+        channel.title))
     return redirect('admin')

@@ -5,6 +5,8 @@ urlpatterns = patterns('',
     url(r'^admin/$', 'youtube.views.admin', name='admin'),
     url(r'^admin/(?P<channelid>\d+)/delete/$', 'youtube.views.channel_delete',
         name='channel-delete'),
+    url(r'^admin/(?P<channelid>\d+)/toggle-hidden/$',
+        'youtube.views.toggle_hidden', name='toggle-hidden'),
     url(r'^admin/add/$', 'youtube.views.channel_add', name='channel-add'),
     url(r'^login/$', 'django.contrib.auth.views.login', {
         'template_name': 'youtube/login.html',

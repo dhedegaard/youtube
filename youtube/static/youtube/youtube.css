@@ -51,3 +51,7 @@ div.item .viewcount {
 .inline {
     display: inline;
 }
+
+.hidden-channel {
+    opacity: 0.5;
+}

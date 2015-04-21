@@ -45,7 +45,7 @@
         </tr>
     </thead>
     {% for channel in channels %}
-    <tr>
+    <tr{% if channel.hidden %} class="hidden-channel"{% endif %}>
         <td>
             <a href="{{ channel.url }}">
                 {{ channel.title }}
@@ -61,6 +61,21 @@
             {{ channel.updated|timesince }} ago
         </td>
         <td class="text-right">
+            <form class="form form-inline inline" method="POST"
+                action="{% url 'toggle-hidden' channelid=channel.pk %}">
+                {% csrf_token %}
+                {% if channel.hidden %}
+                <button class="btn btn-xs btn-success">
+                    <i class="glyphicon glyphicon-eye-open"></i>
+                    Show channel
+                </button>
+                {% else %}
+                <button class="btn btn-xs btn-warning">
+                    <i class="glyphicon glyphicon-eye-close"></i>
+                    Hide channel
+                </button>
+                {% endif %}
+            </form>
             <form class="form form-inline inline" method="POST"
                 action="{% url 'channel-delete' channelid=channel.pk %}">
                 {% csrf_token %}
