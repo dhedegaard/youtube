@@ -27,6 +27,7 @@ def admin(request):
                      prefetch_related('videos').
                      order_by('hidden', 'title')),
         'form': form,
+        'page': 'admin',
     })
 
 
