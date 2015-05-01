@@ -9,6 +9,7 @@ class Channel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     hidden = models.BooleanField(default=False)
+    tags = models.ManyToManyField('Tag', related_name='channels')
 
     def __unicode__(self):
         return u'id: %s, author: %s' % (
@@ -128,3 +129,9 @@ class Video(models.Model):
 
     def __unicode__(self):
         return unicode(self.youtubeid)
+
+
+class Tag(models.Model):
+    name = models.TextField(unique=True, verbose_name=u'Tagname')
+    background_color = models.TextField(
+        default='#777', verbose_name=u'Background color')
