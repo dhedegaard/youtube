@@ -33,7 +33,7 @@
 </div>
 
 
-{% if channels %}
+{% if admin_channels %}
 <table class="table table-condensed">
     <thead>
         <tr>
@@ -44,7 +44,7 @@
             <th></th>
         </tr>
     </thead>
-    {% for channel in channels %}
+    {% for channel in admin_channels %}
     <tr{% if channel.hidden %} class="hidden-channel"{% endif %}>
         <td>
             <a href="{{ channel.url }}">

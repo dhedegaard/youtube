@@ -13,8 +13,18 @@ def index(request):
         'videos': (Video.objects.
                    filter(uploader__hidden=False).
                    prefetch_related('uploader')),
+        'channels': Channel.objects.filter(hidden=False).order_by('title'),
     })
 
+
+def channel(request, author):
+    channel = get_object_or_404(Channel.objects.
+                                prefetch_related('videos').
+                                filter(hidden=False), author=author)
+    return render(request, 'youtube/index.html', {
+        'videos': channel.videos.all(),
+        'channels': Channel.objects.filter(hidden=False).order_by('title'),
+    })
 
 @login_required
 def admin(request):
@@ -24,8 +34,11 @@ def admin(request):
         form = AddChannelForm()
     return render(request, 'youtube/admin.html', {
         'channels': (Channel.objects.
-                     prefetch_related('videos').
-                     order_by('hidden', 'title')),
+                     filter(hidden=False).
+                     order_by('title')),
+        'admin_channels': (Channel.objects.
+                           prefetch_related('videos').
+                           order_by('hidden', 'title')),
         'form': form,
         'page': 'admin',
     })
