@@ -55,3 +55,8 @@ div.item .viewcount {
 .hidden-channel {
     opacity: 0.5;
 }
+
+.channel-thumbnail {
+    width: 16px;
+    height: 16px;
+}

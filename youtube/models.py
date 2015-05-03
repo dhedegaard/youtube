@@ -10,6 +10,7 @@ class Channel(models.Model):
     updated = models.DateTimeField(auto_now_add=True)
     hidden = models.BooleanField(default=False)
     tags = models.ManyToManyField('Tag', related_name='channels')
+    thumbnail = models.TextField(default='')
 
     def __unicode__(self):
         return u'id: %s, author: %s' % (
@@ -24,11 +25,11 @@ class Channel(models.Model):
         )
         resp.raise_for_status()
         resp = resp.json()
-        new_title = resp['entry']['title']['$t']
-        if new_title != self.title:
-            self.title = new_title
-            if save:
-                self.save(update_fields=['title'])
+
+        self.title = resp['entry']['title']['$t']
+        self.thumbnail = resp['entry']['media$thumbnail']['url']
+
+        self.save()
 
     def fetch_videos(self, force=False):
         resp = requests.get(
