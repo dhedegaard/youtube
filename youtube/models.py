@@ -1,6 +1,10 @@
 import requests
 import dateutil.parser
 from django.db import models
+from django.conf import settings
+from isodate import parse_duration
+
+from .utils import calculate_rating
 
 
 class Channel(models.Model):
@@ -11,6 +15,7 @@ class Channel(models.Model):
     hidden = models.BooleanField(default=False)
     tags = models.ManyToManyField('Tag', related_name='channels')
     thumbnail = models.TextField(default='')
+    uploads_playlist = models.TextField(default='')
 
     def __unicode__(self):
         return u'id: %s, author: %s' % (
@@ -19,25 +24,65 @@ class Channel(models.Model):
         )
 
     def update_channel_info(self, save=True):
+        # Fetch data from the API.
         resp = requests.get(
-            'https://gdata.youtube.com/feeds/api/users/%s'
-            '?v=2.1&alt=json' % self.author
+            'https://www.googleapis.com/youtube/v3/channels', params={
+            'part': 'snippet,contentDetails',
+            'forUsername': self.author,
+            'key': settings.YOUTUBE_API_KEY,
+            }
         )
         resp.raise_for_status()
-        resp = resp.json()
 
-        self.title = resp['entry']['title']['$t']
-        self.thumbnail = resp['entry']['media$thumbnail']['url']
+        # Read response as JSON and fetch the first item.
+        data = resp.json()
+        item = data['items'][0]
 
-        self.save()
+        # Save details from channel.
+        self.title = item['snippet']['title']
+        self.thumbnail = item['snippet']['thumbnails']['default']['url']
+        self.uploads_playlist = (item['contentDetails']['relatedPlaylists']
+                                 ['uploads'])
+
+        if save:
+            self.save()
 
     def fetch_videos(self, force=False):
+        # Fetch playlist-data from the API.
         resp = requests.get(
-            'https://gdata.youtube.com/feeds/api/videos?'
-            'author=%s&v=2&orderby=updated&alt=jsonc' % self.author
+            'https://www.googleapis.com/youtube/v3/playlistItems', params={
+            'part': 'contentDetails',
+            'maxResults': 50,
+            'playlistId': self.uploads_playlist,
+            'key': settings.YOUTUBE_API_KEY,
+        })
+        resp.raise_for_status()
+
+        # Read response as JSON and fetch all videoids.
+        data = resp.json()
+        videoids = u','.join([item['contentDetails']['videoId']
+                              for item in data['items']])
+
+        # Fetch data for the videoids from previous playlist call, since
+        # playlist doesn't return all the data we need.
+        resp = requests.get(
+            'https://www.googleapis.com/youtube/v3/videos', params={
+                'part': 'snippet,contentDetails,statistics',
+                'id': videoids,
+                'key': settings.YOUTUBE_API_KEY,
+            }
         )
-        for row in resp.json()['data']['items']:
-            Video.objects.create_or_update(self, row)
+        resp.raise_for_status()
+        data = resp.json()
+
+        # Create all categories used, and not already in the backend.
+        Category.objects.get_categoryids([
+            e['snippet']['categoryId'] for e in data['items']])
+
+        # Read response as JSON and iterate on items updating/creating Video
+        # objects as we go along.
+        for item in resp.json()['items']:
+            Video.objects.create_or_update(self, item)
 
     @property
     def url(self):
@@ -45,8 +90,48 @@ class Channel(models.Model):
             'author': self.author,
         }
 
+class CategoryQuerySet(models.QuerySet):
+    def get_categoryids(self, categoryids):
+        '''
+        Fetches and returns a list of categories, creates categories that does
+        not already exist.
+
+        Internally the category is attempted fetched from the backend, if it
+        does not exist a query against the youtube API is executed to fetch and
+        create a new `Category` object.
+        '''
+        # Fetch existing categories from the backend.
+        categories = self.filter(id__in=categoryids)
+        existing_categoryids = categories.values_list('pk', flat=True)
+
+        # Figure out what we're missing (if we're missing anything).
+        missing_categoryids = [e for e in categoryids
+                               if e not in existing_categoryids]
+
+        # Fetch missing categories and create them in the backend.
+        if missing_categoryids:
+            resp = requests.get(
+                'https://www.googleapis.com/youtube/v3/videoCategories',
+                params={
+                    'part': 'snippet',
+                    'id': ','.join([str(e) for e in missing_categoryids]),
+                    'key': settings.YOUTUBE_API_KEY,
+                })
+            resp.raise_for_status()
+
+            # Iterate and create new categories, adding them to the existing
+            # list of categories.
+            categories = list(categories)
+            for item in resp.json()['items']:
+                categories.append(self.get_or_create(
+                    id=item['id'], category=item['snippet']['title'])[0])
+
+        return categories
 
 class Category(models.Model):
+    objects = CategoryQuerySet.as_manager()
+
+    id = models.IntegerField(primary_key=True)
     category = models.TextField(unique=True)
 
     def __unicode__(self):
@@ -54,41 +139,45 @@ class Category(models.Model):
 
 
 class VideoQuerySet(models.QuerySet):
-    def create_or_update(self, channel, row):
-        youtubeid = row['id']
+    def create_or_update(self, channel, data):
+        # Fetch video details, if it exists.
+        youtubeid = data['id']
         video = Video.objects.filter(youtubeid=youtubeid).first()
+        rating = calculate_rating(data['statistics']['likeCount'],
+                                  data['statistics']['dislikeCount'])
+        duration = parse_duration(data['contentDetails']['duration'])
 
         if not video:
-            category = Category.objects.get_or_create(
-                category=row['category'],
-            )[0]
             # Create the video.
             video = Video.objects.create(
                 youtubeid=youtubeid,
                 uploader=channel,
-                title=row['title'],
-                category=category,
-                description=row['description'],
-                duration=row['duration'],
-                rating=row.get('rating', 0.0),
-                like_count=row.get('likeCount', 0),
-                rating_count=row.get('ratingCount', 0),
-                view_count=row.get('viewCount', 0),
-                favorite_count=row.get('favoriteCount', 0),
-                comment_count=row.get('commentCount', 0),
-                uploaded=dateutil.parser.parse(row['uploaded']),
-                updated=dateutil.parser.parse(row['updated']),
+                title=data['snippet']['title'],
+                category_id=data['snippet']['categoryId'],
+                description=data['snippet']['description'],
+                duration=duration.total_seconds(),
+                rating=rating or 0.0,
+                like_count=data['statistics']['likeCount'],
+                rating_count=(int(data['statistics']['likeCount']) +
+                              int(data['statistics']['dislikeCount'])),
+                view_count=data['statistics']['viewCount'],
+                favorite_count=data['statistics']['favoriteCount'],
+                comment_count=data['statistics']['commentCount'],
+                uploaded=dateutil.parser.parse(data['snippet']['publishedAt']),
+                updated=dateutil.parser.parse(data['snippet']['publishedAt']),
             )
         else:
-            video.title = row['title']
-            video.description = row['description']
-            video.rating = row.get('rating', 0.0)
-            video.like_count = row.get('likeCount', 0)
-            video.rating_count = row.get('ratingCount', 0)
-            video.view_count = row.get('viewCount', 0)
-            video.favorite_count = row.get('favoriteCount', 0)
-            video.comment_count = row.get('commentCount', 0)
-            video.updated = dateutil.parser.parse(row['updated'])
+            video.title = data['snippet']['title']
+            video.description = data['snippet']['description']
+            video.rating = rating or 0.0
+            video.like_count = data['statistics']['likeCount']
+            video.rating_count = (int(data['statistics']['likeCount']) +
+                                  int(data['statistics']['dislikeCount']))
+            video.view_count = data['statistics']['viewCount']
+            video.favorite_count = data['statistics']['favoriteCount']
+            video.comment_count = data['statistics']['commentCount']
+            video.updated = dateutil.parser.parse(
+                data['snippet']['publishedAt'])
             video.save()
 
         return video

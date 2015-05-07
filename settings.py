@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 import sys
 
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(__file__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -124,3 +124,7 @@ LOGGING = {
 
 LOGIN_REDIRECT_URL = '/admin/'
 LOGIN_URL = '/login/'
+
+# Put your youtube API key here, it will be used in all API calls to the
+# Youtube API.
+YOUTUBE_API_KEY = 'PUT_YOUTUBE_API_KEY_HERE'
