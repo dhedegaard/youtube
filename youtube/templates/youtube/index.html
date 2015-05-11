@@ -48,5 +48,9 @@
         </div>
     </div>
     {% if forloop.index|divisibleby:'6' and not forloop.first or forloop.last %}</div>{% endif %}
+{% empty %}
+<div class="alert alert-info">
+    There are no videos to display.
+</div>
 {% endfor %}
 {% endblock %}
