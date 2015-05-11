@@ -10,7 +10,7 @@
         <a href="{{ video.url }}" target="_blank">
             <div class="thumbnail">
                 <span class="duration">{{ video.duration|pretty_duration }}</span>
-                <img class="thumbnail" src="123{{ video.get_thumbnail }}"
+                <img class="thumbnail" src="{{ video.get_thumbnail }}"
                      onerror='this.src = "{% static 'youtube/missing.png' %}"' />
             </div>
         </a>
