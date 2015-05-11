@@ -17,6 +17,10 @@ class Command(BaseCommand):
         channels = Channel.objects.all()
         channel_len = len(channels)
 
+        if channel_len == 0:
+            logger.warning('There are no channels to update.')
+            return
+
         # Iterate on each channel, fetching data as we go along.
         for idx, channel in enumerate(channels):
             logger.info('  [%s/%s] fetching for channel: %s',
