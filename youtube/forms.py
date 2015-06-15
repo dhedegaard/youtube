@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import re
 
 from django import forms
@@ -15,7 +16,7 @@ class AddChannelForm(forms.Form):
 
         # If the channel is an URL, convert the URL to the channel name
         # expected by the system.
-        rc = re.findall(ur'^https:\/\/www.youtube.com\/user\/(.+?)\/?.*$',
+        rc = re.findall(r'^https:\/\/www.youtube.com\/user\/(.+?)\/?.*$',
                         channel, re.I | re.U)
         if rc:
             channel = rc[0]
@@ -24,14 +25,14 @@ class AddChannelForm(forms.Form):
         existing_channel = Channel.objects.filter(author=channel).first()
         if existing_channel:
             raise forms.ValidationError(format_html(
-                u'Channel already exists in the system under the title: '
-                u'<b>{0}</b>',
+                'Channel already exists in the system under the title: '
+                '<b>{0}</b>',
                 existing_channel.title))
 
         # Check to see if the channel is valid in the API.
         if not does_channel_author_exist(channel):
             raise forms.ValidationError(format_html(
-                u'Channel does not seem to exist: <b>{0}</b>',
+                'Channel does not seem to exist: <b>{0}</b>',
                 channel))
 
         return channel
