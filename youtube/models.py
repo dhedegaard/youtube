@@ -27,9 +27,9 @@ class Channel(models.Model):
         # Fetch data from the API.
         resp = requests.get(
             'https://www.googleapis.com/youtube/v3/channels', params={
-            'part': 'snippet,contentDetails',
-            'forUsername': self.author,
-            'key': settings.YOUTUBE_API_KEY,
+                'part': 'snippet,contentDetails',
+                'forUsername': self.author,
+                'key': settings.YOUTUBE_API_KEY,
             }
         )
         resp.raise_for_status()
@@ -51,10 +51,10 @@ class Channel(models.Model):
         # Fetch playlist-data from the API.
         resp = requests.get(
             'https://www.googleapis.com/youtube/v3/playlistItems', params={
-            'part': 'contentDetails',
-            'maxResults': 50,
-            'playlistId': self.uploads_playlist,
-            'key': settings.YOUTUBE_API_KEY,
+                'part': 'contentDetails',
+                'maxResults': 50,
+                'playlistId': self.uploads_playlist,
+                'key': settings.YOUTUBE_API_KEY,
         })
         resp.raise_for_status()
 
