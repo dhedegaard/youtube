@@ -6,7 +6,7 @@ from django.core.management import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from ...models import Channel
+from ...models import Channel, Video
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +50,25 @@ class Command(BaseCommand):
                     else:
                         # No exception, proceed with next channel.
                         break
+
+        # Iterate on all videos, checking HEAD state of thumbnail.
+        logger.info('Marking deleted videos as deleted')
+        for video in Video.objects.exclude_deleted():
+            with transaction.atomic():
+                # Do HTTP HEAD request, to fetch status code without body.
+                resp = requests.head(video.get_thumbnail())
+
+                if resp.status_code == 200:
+                    # The video is still accessible.
+                    continue
+                elif resp.status_code == 404:
+                    # The video has been deleted, mark it as such.
+                    video.deleted = True
+                    video.save()
+                    logger.info('  Marking %s as deleted', video.youtubeid)
+                else:
+                    # WTF, let's see what happens.
+                    resp.raise_for_status()
 
         # All done
         logger.info('Done')

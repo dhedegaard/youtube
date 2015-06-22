@@ -12,8 +12,11 @@ def index(request):
     return render(request, 'youtube/index.html', {
         'videos': (Video.objects.
                    filter(uploader__hidden=False).
+                   exclude_deleted().
                    prefetch_related('uploader')),
-        'channels': Channel.objects.filter(hidden=False).order_by('title'),
+        'channels': (Channel.objects.
+                     filter(hidden=False).
+                     order_by('title')),
     })
 
 
@@ -22,7 +25,7 @@ def channel(request, author):
                                 prefetch_related('videos').
                                 filter(hidden=False), author=author)
     return render(request, 'youtube/index.html', {
-        'videos': channel.videos.all(),
+        'videos': channel.videos.exclude_deleted(),
         'channels': Channel.objects.filter(hidden=False).order_by('title'),
     })
 

@@ -140,6 +140,9 @@ class Category(models.Model):
 
 
 class VideoQuerySet(models.QuerySet):
+    def exclude_deleted(self):
+        return self.exclude(deleted=True)
+
     def create_or_update(self, channel, data):
         # Fetch video details, if it exists.
         youtubeid = data['id']
