@@ -201,6 +201,8 @@ class Video(models.Model):
     uploaded = models.DateTimeField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField()
+    description = models.TextField(default='')
+    deleted = models.BooleanField(default=False, db_index=True)
 
     class Meta:
         ordering = ['-uploaded']
@@ -210,7 +212,6 @@ class Video(models.Model):
             'youtubeid': self.youtubeid,
             'quality': quality,
         }
-    description = models.TextField(default='')
 
     @property
     def url(self):
