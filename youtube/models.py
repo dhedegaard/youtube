@@ -55,7 +55,8 @@ class Channel(models.Model):
                 'maxResults': 50,
                 'playlistId': self.uploads_playlist,
                 'key': settings.YOUTUBE_API_KEY,
-        })
+            }
+        )
         resp.raise_for_status()
 
         # Read response as JSON and fetch all videoids.
