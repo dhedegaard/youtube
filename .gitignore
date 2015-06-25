@@ -53,3 +53,5 @@ javadoc
 *.sublime-project
 *.sublime-workspace
 venv
+
+db.sqlite3
