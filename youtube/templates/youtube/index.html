@@ -6,7 +6,7 @@
 {% paginate 200 videos %}
 {% for video in videos %}
     {% if forloop.index|divisibleby:'6' or forloop.first %}<div class="row">{% endif %}
-    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2 text-center item" title="{{ video.description }}">
+    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 text-center item">
         <a href="{{ video.url }}" target="_blank">
             <div class="thumbnail">
                 <span class="duration">{{ video.duration|pretty_duration }}</span>

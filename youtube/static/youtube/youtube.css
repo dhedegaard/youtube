@@ -10,7 +10,7 @@ div.thumbnail {
 div.thumbnail img {
     max-width: 100%;
     margin-bottom: 5px;
-    height: 128px;
+    max-height: 128px;
 }
 
 div.thumbnail .duration {
