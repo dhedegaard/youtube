@@ -1,4 +1,6 @@
 import requests
+import datetime
+
 import dateutil.parser
 from django.db import models
 from django.conf import settings
@@ -224,6 +226,15 @@ class Video(models.Model):
 
     def __unicode__(self):
         return unicode(self.youtubeid)
+
+    def save(self, *args, **kwargs):
+        if not self.uploaded:
+            self.uploaded = datetime.datetime.now()
+
+        if not self.updated:
+            self.updated = self.uploaded
+
+        super(Video, self).save(*args, **kwargs)
 
 
 class Tag(models.Model):

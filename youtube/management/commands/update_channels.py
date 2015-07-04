@@ -36,7 +36,7 @@ class Command(BaseCommand):
                         channel.fetch_videos()
                         channel.updated = timezone.now()
                         channel.save()
-                    except requests.exceptions.RequestException, e:
+                    except requests.exceptions.RequestException, e:  # pragma: nocover  # NOQA
                         # If we're at the last attempt, raise.
                         if attempt == 4:
                             raise
