@@ -23,7 +23,7 @@ class DoesChannelAuthorExistTest(TestCase):
 
     @mock.patch('youtube.utils.requests')
     def test__channel_does_not_exist(self, requests_patch):
-        requests_patch.raise_for_status.side_effect = Exception(
+        requests_patch.get().raise_for_status.side_effect = Exception(
             'failed request')
 
         with self.assertRaises(Exception):
