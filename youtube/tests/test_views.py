@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from ..models import Channel
 
@@ -27,3 +28,17 @@ class ChannelTest(TestCase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'youtube/index.html')
+
+
+class LoggedInTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_superuser('testuser', '', 'testpass')
+        self.client.login(username='testuser', password='testpass')
+
+
+class AdminTest(LoggedInTestCase):
+    def test__get(self):
+        resp = self.client.get(reverse('admin'))
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'youtube/admin.html')

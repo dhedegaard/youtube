@@ -31,10 +31,7 @@ def channel(request, author):
 
 @login_required
 def admin(request):
-    if request.method == 'POST':
-        form = AddChannelForm(request.POST)
-    else:
-        form = AddChannelForm()
+    form = AddChannelForm()
     return render(request, 'youtube/admin.html', {
         'channels': (Channel.objects.
                      filter(hidden=False).
