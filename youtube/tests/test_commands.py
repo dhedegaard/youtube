@@ -1,7 +1,5 @@
 import logging
-import datetime
 
-import requests
 import mock
 from django.test import TestCase
 from django.core.management import call_command
@@ -76,7 +74,7 @@ class UpdateChannelsTest(TestCase):
             self, fetch_videos_patch, update_channel_info_patch,
             requests_patch):
         requests_patch.head().status_code = 500
-        video = Video.objects.create(
+        Video.objects.create(
             category=Category.objects.create(
                 id=1,
             ),
