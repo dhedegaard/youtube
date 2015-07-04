@@ -9,7 +9,7 @@ from ..utils import does_channel_author_exist, calculate_rating
 class DoesChannelAuthorExistTest(TestCase):
     @mock.patch('youtube.utils.requests')
     def test__channel_exists(self, requests_patch):
-        requests_patch.json.return_value = {
+        requests_patch.get().json.return_value = {
             'pageInfo': {
                 'totalResults': 1,
             }
