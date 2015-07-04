@@ -59,3 +59,42 @@ class ChannelDeleteTest(LoggedInTestCase):
         self.assertRedirects(resp, reverse('admin'))
         self.assertFalse(Channel.objects.filter(pk=self.channel.pk).exists())
         self.assertTrue(messages_patch.success.called)
+
+
+class ChannelAddTest(LoggedInTestCase):
+    @mock.patch('youtube.views.messages')
+    @mock.patch('youtube.forms.does_channel_author_exist')
+    def test__post__success(self, does_channel_author_exist_patch,
+                            messages_patch):
+        does_channel_author_exist_patch.return_value = True
+
+        with mock.patch.object(Channel,
+                          'update_channel_info') as channel_info_patch,\
+                mock.patch.object(Channel, 'fetch_videos') as fetch_videos_patch:
+
+            resp = self.client.post(reverse('channel-add'), {
+                'channel': 'testchannel',
+            })
+
+            self.assertTrue(channel_info_patch.called)
+            self.assertTrue(fetch_videos_patch.called)
+
+        self.assertRedirects(resp, reverse('admin'))
+        self.assertTrue(messages_patch.success.called)
+        self.assertTrue(does_channel_author_exist_patch.called)
+        self.assertTrue(Channel.objects.filter(author='testchannel').exists())
+
+    @mock.patch('youtube.forms.does_channel_author_exist')
+    def test__post__does_not_exist(self, does_channel_author_exist_patch):
+        does_channel_author_exist_patch.return_value = False
+
+        resp = self.client.post(reverse('channel-add'), {
+            'channel': 'testchannel',
+        })
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'youtube/admin.html')
+        self.assertFormError(
+            resp, 'form', 'channel',
+            'Channel does not seem to exist: <b>testchannel</b>')
+        self.assertTrue(does_channel_author_exist_patch.called)
