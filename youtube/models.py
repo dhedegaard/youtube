@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import requests
 import datetime
 
@@ -20,7 +21,7 @@ class Channel(models.Model):
     uploads_playlist = models.TextField(default='')
 
     def __unicode__(self):
-        return u'id: %s, author: %s' % (
+        return 'id: %s, author: %s' % (
             self.id,
             self.author,
         )
@@ -49,7 +50,7 @@ class Channel(models.Model):
         if save:
             self.save()
 
-    def fetch_videos(self, force=False):
+    def fetch_videos(self):
         # Fetch playlist-data from the API.
         resp = requests.get(
             'https://www.googleapis.com/youtube/v3/playlistItems', params={
@@ -63,8 +64,8 @@ class Channel(models.Model):
 
         # Read response as JSON and fetch all videoids.
         data = resp.json()
-        videoids = u','.join([item['contentDetails']['videoId']
-                              for item in data['items']])
+        videoids = ','.join([item['contentDetails']['videoId']
+                             for item in data['items']])
 
         # Fetch data for the videoids from previous playlist call, since
         # playlist doesn't return all the data we need.
@@ -84,12 +85,12 @@ class Channel(models.Model):
 
         # Read response as JSON and iterate on items updating/creating Video
         # objects as we go along.
-        for item in resp.json()['items']:
+        for item in data['items']:
             Video.objects.create_or_update(self, item)
 
     @property
     def url(self):
-        return u'https://www.youtube.com/user/%(author)s/videos' % {
+        return 'https://www.youtube.com/user/%(author)s/videos' % {
             'author': self.author,
         }
 
