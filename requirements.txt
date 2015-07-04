@@ -3,3 +3,4 @@ python-dateutil==2.4.2
 requests==2.7.0
 django-endless-pagination==2.0
 isodate==0.5.1
+mock==1.0.1
