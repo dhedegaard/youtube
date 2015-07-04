@@ -28,7 +28,7 @@ class Command(BaseCommand):
             logger.info('  [%s/%s] fetching for channel: %s',
                         idx + 1, channel_len, channel.author)
             with transaction.atomic():
-                for attempt in xrange(5):
+                for attempt in range(5):
                     try:
                         # Fetch data for the channel, updating if needed.
                         channel.update_channel_info()
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                         channel.fetch_videos()
                         channel.updated = timezone.now()
                         channel.save()
-                    except requests.exceptions.RequestException, e:  # pragma: nocover  # NOQA
+                    except requests.exceptions.RequestException as e:  # pragma: nocover  # NOQA
                         # If we're at the last attempt, raise.
                         if attempt == 4:
                             raise
