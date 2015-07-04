@@ -98,3 +98,36 @@ class ChannelAddTest(LoggedInTestCase):
             resp, 'form', 'channel',
             'Channel does not seem to exist: <b>testchannel</b>')
         self.assertTrue(does_channel_author_exist_patch.called)
+
+
+class ToggleHiddenTest(LoggedInTestCase):
+    def setUp(self):
+        super(ToggleHiddenTest, self).setUp()
+        self.channel = Channel.objects.create(
+            author='testchannel',
+        )
+
+    @mock.patch('youtube.views.messages')
+    def test__post__set_hidden(self, messages_patch):
+        resp = self.client.post(reverse('toggle-hidden', kwargs={
+            'channelid': self.channel.pk,
+        }))
+
+        self.assertRedirects(resp, reverse('admin'))
+        self.assertTrue(messages_patch.success.called)
+        channel = Channel.objects.get(pk=self.channel.pk)
+        self.assertTrue(channel.hidden)
+
+    @mock.patch('youtube.views.messages')
+    def test__post__unset_hidden(self, messages_patch):
+        self.channel.hidden = True
+        self.channel.save()
+
+        resp = self.client.post(reverse('toggle-hidden', kwargs={
+            'channelid': self.channel.pk,
+        }))
+
+        self.assertRedirects(resp, reverse('admin'))
+        self.assertTrue(messages_patch.success.called)
+        channel = Channel.objects.get(pk=self.channel.pk)
+        self.assertFalse(channel.hidden)
