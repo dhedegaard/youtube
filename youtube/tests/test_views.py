@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import mock
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -42,3 +43,19 @@ class AdminTest(LoggedInTestCase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'youtube/admin.html')
+
+
+class ChannelDeleteTest(LoggedInTestCase):
+    def setUp(self):
+        super(ChannelDeleteTest, self).setUp()
+        self.channel = Channel.objects.create()
+
+    @mock.patch('youtube.views.messages')
+    def test__post(self, messages_patch):
+        resp = self.client.post(reverse('channel-delete', kwargs={
+            'channelid': self.channel.pk,
+        }))
+
+        self.assertRedirects(resp, reverse('admin'))
+        self.assertFalse(Channel.objects.filter(pk=self.channel.pk).exists())
+        self.assertTrue(messages_patch.success.called)
