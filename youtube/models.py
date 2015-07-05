@@ -94,6 +94,7 @@ class Channel(models.Model):
             'author': self.author,
         }
 
+
 class CategoryQuerySet(models.QuerySet):
     def get_categoryids(self, categoryids):
         '''
