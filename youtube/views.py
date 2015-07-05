@@ -30,6 +30,7 @@ def channel(request, author):
         'channels': Channel.objects.filter(hidden=False).order_by('title'),
     })
 
+
 @login_required
 def admin(request):
     form = AddChannelForm(request.POST or None)

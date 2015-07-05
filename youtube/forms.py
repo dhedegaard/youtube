@@ -9,7 +9,7 @@ from .models import Channel
 
 
 class AddChannelForm(forms.Form):
-    channel = forms.CharField(label=u'Add a channel')
+    channel = forms.CharField(label='Add a channel')
 
     def clean_channel(self):
         channel = self.cleaned_data['channel']
