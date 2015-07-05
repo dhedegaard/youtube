@@ -239,6 +239,6 @@ class Video(models.Model):
 
 
 class Tag(models.Model):
-    name = models.TextField(unique=True, verbose_name=u'Tagname')
+    name = models.TextField(unique=True, verbose_name='Tagname')
     background_color = models.TextField(
-        default='#777', verbose_name=u'Background color')
+        default='#777', verbose_name='Background color')
