@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -51,7 +52,7 @@ def channel_delete(request, channelid):
     title = channel.title
     channel.delete()
     messages.success(request, format_html(
-        u'Channel with the title removed: <b>{0}</b>',
+        'Channel with the title removed: <b>{0}</b>',
         title))
     return redirect('admin')
 
@@ -69,7 +70,7 @@ def channel_add(request):
     channel.fetch_videos()
 
     messages.success(request, format_html(
-        u'Added channel under name <b>{0}</b>',
+        'Added channel under name <b>{0}</b>',
         channel.title))
 
     return redirect('admin')
@@ -82,6 +83,6 @@ def toggle_hidden(request, channelid):
     channel.hidden = not channel.hidden
     channel.save(update_fields=['hidden'])
     messages.success(request, format_html(
-        u'Visibility of channel <b>{0}</b> changed.',
+        'Visibility of channel <b>{0}</b> changed.',
         channel.title))
     return redirect('admin')
