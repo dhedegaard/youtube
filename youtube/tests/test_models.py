@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import mock
 from django.test import TestCase
 
@@ -92,3 +93,38 @@ class ChannelTest(TestCase):
         self.assertTrue(requests_patch.get.called)
         self.assertTrue(requests_patch.get().raise_for_status.called)
         self.assertTrue(requests_patch.get().json.called)
+
+
+class CategoryQuerySetTest(TestCase):
+    def test__empty_ids(self):
+        self.assertEqual(len(Category.objects.get_categoryids([])), 0)
+
+    def test__existing_categories(self):
+        category = Category.objects.create(
+            pk=1,
+            category='testcategory',
+        )
+
+        result = Category.objects.get_categoryids([1])
+
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0], category)
+
+    @mock.patch('youtube.models.requests')
+    def test__new_category(self, requests_patch):
+        requests_patch.get().json.return_value = {
+            'items': [
+                {
+                    'id': 1,
+                    'snippet': {
+                        'title': 'testcategory',
+                    },
+                },
+            ],
+        }
+        result = Category.objects.get_categoryids([1])
+
+        self.assertEqual(Category.objects.all().count(), 1)
+        self.assertTrue(Category.objects.filter(pk=1).exists())
+        self.assertEqual(result[0].pk, 1)
+        self.assertEqual(result[0].category, 'testcategory')
