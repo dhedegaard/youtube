@@ -1,6 +1,10 @@
 from __future__ import unicode_literals
+import datetime
+from decimal import Decimal
+
 import mock
 from django.test import TestCase
+from django.utils import timezone
 
 from ..models import Channel, Category, Video
 
@@ -128,3 +132,76 @@ class CategoryQuerySetTest(TestCase):
         self.assertTrue(Category.objects.filter(pk=1).exists())
         self.assertEqual(result[0].pk, 1)
         self.assertEqual(result[0].category, 'testcategory')
+
+
+class VideoQuerySetTest(TestCase):
+    def setUp(self):
+        self.channel = Channel.objects.create(
+            author='testchannel',
+        )
+        self.category = Category.objects.create(
+            pk=1,
+            category='testcategory',
+        )
+        self.videodata = {
+            'id': 'abcdef',
+            'statistics': {
+                'likeCount': 200,
+                'dislikeCount': 250,
+                'viewCount': 1000,
+                'favoriteCount': 20,
+                'commentCount': 15,
+            },
+            'contentDetails': {
+                'duration': 'PT3M40S',
+            },
+            'snippet': {
+                'title': 'testvideo',
+                'categoryId': 1,
+                'description': 'testdescription',
+                'publishedAt': '2014-01-01 12:00',
+            },
+        }
+
+    def test__create_or_update__new_video(self):
+        Video.objects.create_or_update(self.channel, self.videodata)
+        uploaded = timezone.make_aware(
+            datetime.datetime(2014, 1, 1, 12), timezone.get_current_timezone())
+
+        self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
+        video = Video.objects.get(youtubeid='abcdef')
+        self.assertEqual(video.rating, Decimal('2.2'))
+        self.assertEqual(video.duration, 3 * 60 + 40)
+        self.assertEqual(video.uploader, self.channel)
+        self.assertEqual(video.category, self.category)
+        self.assertEqual(video.like_count, 200)
+        self.assertEqual(video.view_count, 1000)
+        self.assertEqual(video.favorite_count, 20)
+        self.assertEqual(video.comment_count, 15)
+        self.assertEqual(video.uploaded, uploaded)
+        self.assertEqual(video.updated, uploaded)
+
+    def test__create_or_update__existing_video(self):
+        video = Video.objects.create(
+            youtubeid='abcdef',
+            category=self.category,
+            uploader=self.channel,
+            duration=123,
+        )
+
+        Video.objects.create_or_update(self.channel, self.videodata)
+        uploaded = timezone.make_aware(
+            datetime.datetime(2014, 1, 1, 12), timezone.get_current_timezone())
+
+        self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
+        video = Video.objects.get(youtubeid='abcdef')
+        self.assertEqual(video.rating, Decimal('2.2'))
+        self.assertEqual(video.duration, 123)
+        self.assertEqual(video.uploader, self.channel)
+        self.assertEqual(video.category, self.category)
+        self.assertEqual(video.like_count, 200)
+        self.assertEqual(video.view_count, 1000)
+        self.assertEqual(video.favorite_count, 20)
+        self.assertEqual(video.comment_count, 15)
+        self.assertIsNotNone(video.uploaded)
+        self.assertEqual(video.updated, uploaded)
