@@ -1,0 +1,6 @@
+[report]
+omit = venv*,wsgi.py
+exclude_lines=
+    pragma: nocover
+    def __repr__
+    def __unicode__

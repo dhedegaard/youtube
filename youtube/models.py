@@ -221,7 +221,7 @@ class Video(models.Model):
         }
 
     @property
-    def url(self):
+    def url(self):  # pragma: nocover
         return 'https://www.youtube.com/watch?v=%(youtubeid)s' % {
             'youtubeid': self.youtubeid,
         }
