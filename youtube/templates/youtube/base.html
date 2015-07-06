@@ -63,6 +63,23 @@
                                     </a>
                                 </li>
                                 {% endfor %}
+                                {% if request.user.is_authenticated %}
+                                    <li role="separator" class="divider"></li>
+                                    {% hidden_channels as hidden_channels %}
+                                    {% for channel in hidden_channels %}
+                                        <li>
+                                            <a href="{% url 'channel' author=channel.author %}">
+                                                {% if channel.thumbnail %}
+                                                <img src="{{ channel.thumbnail }}"
+                                                     class="channel-thumbnail" />
+                                                     {% endif %}
+                                                <span class="text-muted">
+                                                    {{ channel.title }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                {% endif %}
                             </ul>
                         </li>
                         {% endif %}

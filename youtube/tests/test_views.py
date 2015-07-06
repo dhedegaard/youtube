@@ -30,6 +30,29 @@ class ChannelTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'youtube/index.html')
 
+    def test__get__hidden_not_logged_in(self):
+        self.channel.hidden = True
+        self.channel.save()
+
+        resp = self.client.get(reverse('channel', kwargs={
+            'author': self.channel.author,
+        }))
+
+        self.assertEqual(resp.status_code, 404)
+
+    def test__get__hidden_logged_in(self):
+        self.channel.hidden = True
+        self.channel.save()
+        User.objects.create_superuser('testuser', '', 'testpass')
+        self.client.login(username='testuser', password='testpass')
+
+        resp = self.client.get(reverse('channel', kwargs={
+            'author': self.channel.author,
+        }))
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'youtube/index.html')
+
 
 class LoggedInTestCase(TestCase):
     def setUp(self):

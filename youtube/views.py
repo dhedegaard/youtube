@@ -19,9 +19,17 @@ def index(request):
 
 
 def channel(request, author):
-    channel = get_object_or_404(Channel.objects.
-                                prefetch_related('videos').
-                                filter(hidden=False), author=author)
+    # Basic queryset for channel, prefetching video entries.
+    qs = Channel.objects.prefetch_related('videos')
+
+    # If we're not logged in, don't allow showing hidden channels.
+    if not request.user.is_authenticated():
+        qs = qs.filter(hidden=False)
+
+    # Fetch the channel, or 404.
+    channel = get_object_or_404(qs, author=author)
+
+    # Render and return.
     return render(request, 'youtube/index.html', {
         'videos': channel.videos.exclude_deleted(),
     })
