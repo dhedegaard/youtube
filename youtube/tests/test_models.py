@@ -159,7 +159,7 @@ class VideoQuerySetTest(TestCase):
                 'title': 'testvideo',
                 'categoryId': 1,
                 'description': 'testdescription',
-                'publishedAt': '2014-01-01 12:00',
+                'publishedAt': '2014-01-01T12:00:00.000Z',
             },
         }
 
