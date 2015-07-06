@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 import requests
-import datetime
 
 import dateutil.parser
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from isodate import parse_duration
 
 from .utils import calculate_rating
@@ -231,7 +231,7 @@ class Video(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.uploaded:
-            self.uploaded = datetime.datetime.now()
+            self.uploaded = timezone.now()
 
         if not self.updated:
             self.updated = self.uploaded
