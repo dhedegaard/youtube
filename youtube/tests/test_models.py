@@ -165,8 +165,7 @@ class VideoQuerySetTest(TestCase):
 
     def test__create_or_update__new_video(self):
         Video.objects.create_or_update(self.channel, self.videodata)
-        uploaded = timezone.make_aware(
-            datetime.datetime(2014, 1, 1, 12), timezone.get_current_timezone())
+        uploaded = timezone.make_aware(datetime.datetime(2014, 1, 1, 12))
 
         self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
         video = Video.objects.get(youtubeid='abcdef')
@@ -190,8 +189,7 @@ class VideoQuerySetTest(TestCase):
         )
 
         Video.objects.create_or_update(self.channel, self.videodata)
-        uploaded = timezone.make_aware(
-            datetime.datetime(2014, 1, 1, 12), timezone.get_current_timezone())
+        uploaded = timezone.make_aware(datetime.datetime(2014, 1, 1, 12))
 
         self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
         video = Video.objects.get(youtubeid='abcdef')
