@@ -18,7 +18,8 @@ class Migration(migrations.Migration):
             name='updated',
             field=models.DateTimeField(
                 default=timezone.make_aware(
-                    datetime.datetime(2015, 2, 27, 21, 13, 37, 642777)),
+                    datetime.datetime(2015, 2, 27, 21, 13, 37, 642777),
+                    timezone.get_current_timezone()),
                 auto_now_add=True),
             preserve_default=False,
         ),
