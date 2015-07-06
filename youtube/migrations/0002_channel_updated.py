@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import datetime
 
 from django.db import models, migrations
-import datetime
+from django.utils import timezone
 
 
 class Migration(migrations.Migration):
@@ -16,7 +17,8 @@ class Migration(migrations.Migration):
             model_name='channel',
             name='updated',
             field=models.DateTimeField(
-                default=datetime.datetime(2015, 2, 27, 21, 13, 37, 642777),
+                default=timezone.make_aware(
+                    datetime.datetime(2015, 2, 27, 21, 13, 37, 642777)),
                 auto_now_add=True),
             preserve_default=False,
         ),
