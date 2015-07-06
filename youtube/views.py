@@ -15,9 +15,6 @@ def index(request):
                    filter(uploader__hidden=False).
                    exclude_deleted().
                    prefetch_related('uploader')),
-        'channels': (Channel.objects.
-                     filter(hidden=False).
-                     order_by('title')),
     })
 
 
@@ -27,7 +24,6 @@ def channel(request, author):
                                 filter(hidden=False), author=author)
     return render(request, 'youtube/index.html', {
         'videos': channel.videos.exclude_deleted(),
-        'channels': Channel.objects.filter(hidden=False).order_by('title'),
     })
 
 
@@ -35,9 +31,6 @@ def channel(request, author):
 def admin(request):
     form = AddChannelForm(request.POST or None)
     return render(request, 'youtube/admin.html', {
-        'channels': (Channel.objects.
-                     filter(hidden=False).
-                     order_by('title')),
         'admin_channels': (Channel.objects.
                            prefetch_related('videos').
                            order_by('hidden', 'title')),

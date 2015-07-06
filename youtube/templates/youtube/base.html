@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+{% load youtubetags %}
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -42,6 +43,7 @@
                     </div>
                     {% endif %}
                     <ul class="nav navbar-nav">
+                        {% visible_channels as channels %}
                         {% if channels %}
                         <li class="dropdown{% if page == 'channel' %} active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
