@@ -133,6 +133,7 @@ class CategoryQuerySet(models.QuerySet):
 
         return categories
 
+
 class Category(models.Model):
     objects = CategoryQuerySet.as_manager()
 

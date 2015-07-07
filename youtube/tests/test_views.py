@@ -92,8 +92,9 @@ class ChannelAddTest(LoggedInTestCase):
         does_channel_author_exist_patch.return_value = True
 
         with mock.patch.object(Channel,
-                          'update_channel_info') as channel_info_patch,\
-                mock.patch.object(Channel, 'fetch_videos') as fetch_videos_patch:
+                        'update_channel_info') as channel_info_patch,\
+                mock.patch.object(Channel,
+                        'fetch_videos') as fetch_videos_patch:
 
             resp = self.client.post(reverse('channel-add'), {
                 'channel': 'testchannel',

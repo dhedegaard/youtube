@@ -66,7 +66,7 @@ class ChannelTest(TestCase):
 
         self.channel.update_channel_info(save=False)
 
-        channel = Channel.objects.get(pk=self.channel.pk)
+        Channel.objects.get(pk=self.channel.pk)
         self.assertEqual(self.channel.title, 'testchannel')
         self.assertEqual(self.channel.thumbnail,
                          'http://example.com/image.png')
