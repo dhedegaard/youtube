@@ -6,6 +6,7 @@ from django.core.management import call_command
 
 from ..models import Channel, Video, Category
 
+
 class UpdateChannelsTest(TestCase):
     def setUp(self):
         self.logger = logging.getLogger(

@@ -27,6 +27,6 @@ def calculate_rating(like_count, dislike_count):
     '''
     try:
         return round(float(like_count) /
-                    (float(like_count) + float(dislike_count)) * 5.0, 1)
+                     (float(like_count) + float(dislike_count)) * 5.0, 1)
     except ZeroDivisionError:
         return None
