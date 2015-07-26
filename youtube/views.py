@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.html import format_html
 from django.views.decorators.http import require_POST
+from django.db import transaction
 
 from .models import Video, Channel
 from .forms import AddChannelForm
@@ -49,6 +50,7 @@ def admin(request):
 
 @require_POST
 @login_required
+@transaction.atomic
 def channel_delete(request, channelid):
     channel = get_object_or_404(Channel, pk=channelid)
     title = channel.title
@@ -61,6 +63,7 @@ def channel_delete(request, channelid):
 
 @require_POST
 @login_required
+@transaction.atomic
 def channel_add(request):
     form = AddChannelForm(request.POST)
 
@@ -80,6 +83,7 @@ def channel_add(request):
 
 @require_POST
 @login_required
+@transaction.atomic
 def toggle_hidden(request, channelid):
     channel = get_object_or_404(Channel, pk=channelid)
     channel.hidden = not channel.hidden
