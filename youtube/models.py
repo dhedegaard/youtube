@@ -50,43 +50,61 @@ class Channel(models.Model):
         if save:
             self.save()
 
-    def fetch_videos(self):
-        # Fetch playlist-data from the API.
-        resp = requests.get(
-            'https://www.googleapis.com/youtube/v3/playlistItems', params={
-                'part': 'contentDetails',
-                'maxResults': 50,
-                'playlistId': self.uploads_playlist,
-                'key': settings.YOUTUBE_API_KEY,
-            }
-        )
-        resp.raise_for_status()
+    def fetch_videos(self, full_fetch=False):
+        '''
+        Fetch new videos from the channel.
 
-        # Read response as JSON and fetch all videoids.
-        data = resp.json()
-        videoids = ','.join([item['contentDetails']['videoId']
-                             for item in data['items']])
+        If full_fetch is True all videos for the given channel is fetched.
+        '''
+        next_page_token = None
+        content_exists = True
 
-        # Fetch data for the videoids from previous playlist call, since
-        # playlist doesn't return all the data we need.
-        resp = requests.get(
-            'https://www.googleapis.com/youtube/v3/videos', params={
-                'part': 'snippet,contentDetails,statistics',
-                'id': videoids,
-                'key': settings.YOUTUBE_API_KEY,
-            }
-        )
-        resp.raise_for_status()
-        data = resp.json()
+        while content_exists:
+            # Fetch playlist-data from the API.
+            resp = requests.get(
+                'https://www.googleapis.com/youtube/v3/playlistItems', params={
+                    'part': 'contentDetails',
+                    'maxResults': 50,
+                    'playlistId': self.uploads_playlist,
+                    'key': settings.YOUTUBE_API_KEY,
+                    'pageToken': next_page_token
+                }
+            )
+            resp.raise_for_status()
 
-        # Create all categories used, and not already in the backend.
-        Category.objects.get_categoryids([
-            e['snippet']['categoryId'] for e in data['items']])
+            # Read response as JSON and fetch all videoids.
+            data = resp.json()
+            videoids = set(
+                [item['contentDetails']['videoId'] for item in data['items']]
+            )
 
-        # Read response as JSON and iterate on items updating/creating Video
-        # objects as we go along.
-        for item in data['items']:
-            Video.objects.create_or_update(self, item)
+            # Fetch the next page token, if it exists.
+            if full_fetch:
+                next_page_token = data.get('nextPageToken')
+                content_exists = bool(next_page_token)
+            else:
+                content_exists = False
+
+            # Fetch data for the videoids from previous playlist call(s), since
+            # playlist doesn't return all the data we need.
+            resp = requests.get(
+                'https://www.googleapis.com/youtube/v3/videos', params={
+                    'part': 'snippet,contentDetails,statistics',
+                    'id': ','.join(videoids),
+                    'key': settings.YOUTUBE_API_KEY,
+                }
+            )
+            resp.raise_for_status()
+            data = resp.json()
+
+            # Create all categories used, and not already in the backend.
+            Category.objects.get_categoryids([
+                e['snippet']['categoryId'] for e in data['items']])
+
+            # Read response as JSON and iterate on items updating/creating
+            # Video objects as we go along.
+            for item in data['items']:
+                Video.objects.create_or_update(self, item)
 
     @property
     def url(self):

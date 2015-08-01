@@ -72,7 +72,7 @@ def channel_add(request):
 
     channel = Channel.objects.create(author=form.cleaned_data['channel'])
     channel.update_channel_info()
-    channel.fetch_videos()
+    channel.fetch_videos(full_fetch=True)
 
     messages.success(request, format_html(
         'Added channel under name <b>{0}</b>',
