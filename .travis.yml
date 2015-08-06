@@ -1,14 +1,5 @@
 language: python
 
-python:
-- 2.7
-- 3.2
-- 3.3
-- 3.4
-- pypy
-- pypy3
-- nightly
-
 matrix:
   include:
     - python: 2.7
@@ -26,11 +17,13 @@ matrix:
 env:
 - DJANGO_VERSION=1.7.9
 - DJANGO_VERSION=1.8.3
+- BLEEDING=1
 
 install:
 - pip install -q -r requirements.txt
 - pip install -q coveralls
 - pip install -q Django==$DJANGO_VERSION
+- if [ "$BLEEDING" == "1" ]; then pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U; fi;
 
 script: coverage run --source=. manage.py test
 
