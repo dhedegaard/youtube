@@ -1,0 +1,6 @@
+Django
+python-dateutil
+requests
+django-endless-pagination
+isodate
+mock
