@@ -23,7 +23,7 @@ env:
 install:
 - pip install -q -r requirements.txt
 - pip install -q coveralls
-- pip install -q Django==$DJANGO_VERSION
+- if [ "$DJANGO_VERSION" ]; then pip install -q Django==$DJANGO_VERSION; fi
 - if [ "$BLEEDING" == "1" ]; then pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U; fi;
 
 script: coverage run --source=. manage.py test
