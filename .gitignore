@@ -56,3 +56,4 @@ venv
 
 db.sqlite3
 htmlcov
+.coverage
