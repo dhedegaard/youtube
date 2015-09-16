@@ -103,7 +103,6 @@ def channel_full_fetch(request, channelid):
     channel = get_object_or_404(Channel, pk=channelid)
 
     # Do the full update.
-    raise Exception('hej')
     channel.update_channel_info()
     channel.fetch_videos(full_fetch=True)
 

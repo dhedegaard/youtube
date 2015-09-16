@@ -83,6 +83,14 @@
                 {% endif %}
             </form>
             <form class="form form-inline inline" method="POST"
+                action="{% url 'channel-full-fetch' channelid=channel.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-xs btn-info" title="Does a full fetch of all videos on the channel">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                    Full update
+                </button>
+            </form>
+            <form class="form form-inline inline" method="POST"
                 action="{% url 'channel-delete' channelid=channel.pk %}">
                 {% csrf_token %}
                 <button class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to remove the channel ?')">
