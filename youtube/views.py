@@ -33,6 +33,7 @@ def channel(request, author):
     # Render and return.
     return render(request, 'youtube/index.html', {
         'videos': channel.videos.exclude_deleted(),
+        'channel': channel,
     })
 
 

@@ -3,7 +3,19 @@
 {% load pretty_duration %}
 {% load endless %}
 {% block content %}
-{% paginate 200 videos %}
+
+{% if channel %}
+<h3>
+    Showing videos from
+    <a href="{{ channel.url }}">
+        <img src="{{ channel.thumbnail }}" class="thumbnail-header" />
+        <b>{{ channel.title }}</b>
+    </a>
+    with a total of <b>{{ videos.count }}</b> videos
+</h3>
+{% endif %}
+
+{% paginate 36 videos %}
 {% for video in videos %}
     {% if forloop.index|divisibleby:'6' or forloop.first %}<div class="row">{% endif %}
     <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 text-center item">
@@ -55,4 +67,23 @@
     There are no videos to display.
 </div>
 {% endfor %}
+
+{% get_pages %}
+{% if pages %}
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            <nav>
+                <ul class="pagination">
+                    {% for page in pages %}
+                    <li{% if page.is_current %} class="active"{% endif %}>
+                        <a href="{% if page.number == 1 %}?page=1{% else %}{{ page.url }}{% endif %}">
+                            {{ page.label }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+{% endif %}
 {% endblock %}

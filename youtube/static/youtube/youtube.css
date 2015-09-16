@@ -73,3 +73,7 @@ div.item .viewcount {
 .uploader img {
     max-height: 16px;
 }
+
+.thumbnail-header {
+    max-height: 28px;
+}
