@@ -11,14 +11,6 @@ python:
 
 matrix:
   allow_failures:
-    - python: 2.7
-      env: BLEEDING=1
-    - python: 3.2
-      env: BLEEDING=1
-    - python: 3.3
-      env: BLEEDING=1
-    - python: 3.4
-      env: BLEEDING=1
     - python: pypy
     - python: pypy3
     - python: nightly
@@ -26,13 +18,11 @@ matrix:
 env:
 - DJANGO_VERSION=1.7.9
 - DJANGO_VERSION=1.8.3
-- BLEEDING=1
 
 install:
-- if ! [ "$BLEEDING" == "1" ]; then pip install -q -r requirements.txt; fi
-- if   [ "$BLEEDING" == "1" ]; then pip install -q -U -r requirements-bleeding.txt; fi
+- pip install -q -r requirements.txt
 - pip install -q coveralls
-- if [ "$DJANGO_VERSION" ]; then pip install -q Django==$DJANGO_VERSION; fi
+- pip install -q Django==$DJANGO_VERSION
 
 script: coverage run --source=. manage.py test
 
