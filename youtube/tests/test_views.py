@@ -8,6 +8,12 @@ from django.contrib.auth.models import User
 from ..models import Channel
 
 
+class LoggedInTestCase(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_superuser('testuser', '', 'testpass')
+        self.client.login(username='testuser', password='testpass')
+
+
 class IndexTest(TestCase):
     def test__get(self):
         resp = self.client.get(reverse('index'))
@@ -52,12 +58,6 @@ class ChannelTest(TestCase):
 
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'youtube/index.html')
-
-
-class LoggedInTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_superuser('testuser', '', 'testpass')
-        self.client.login(username='testuser', password='testpass')
 
 
 class AdminTest(LoggedInTestCase):
@@ -160,7 +160,10 @@ class ToggleHiddenTest(LoggedInTestCase):
 class ChannelFullFetchTest(LoggedInTestCase):
     def setUp(self):
         super(ChannelFullFetchTest, self).setUp()
-        self.channel = Channel.objects.create()
+        self.channel = Channel.objects.create(
+            author='testauthor',
+            title='testtitle',
+        )
 
     @mock.patch('youtube.views.messages')
     @mock.patch('youtube.forms.does_channel_author_exist')
