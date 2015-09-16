@@ -56,8 +56,9 @@ class Command(BaseCommand):
                         logger.warning(
                             'Got exception trying to fetch youtube data')
                         logger.exception(e)
+                        logger.error('Body: %s', e.response.text)
                         # Wait for a second before trying again.
-                        time.sleep(1)
+                        time.sleep(5)
                     else:
                         # No exception, proceed with next channel.
                         break
