@@ -166,11 +166,7 @@ class ChannelFullFetchTest(LoggedInTestCase):
         )
 
     @mock.patch('youtube.views.messages')
-    @mock.patch('youtube.forms.does_channel_author_exist')
-    def test__post__success(self, does_channel_author_exist_patch,
-                            messages_patch):
-        does_channel_author_exist_patch.return_value = True
-
+    def test__post__success(self, messages_patch):
         with mock.patch.object(
                 Channel, 'update_channel_info') as channel_info_patch,\
             mock.patch.object(
@@ -185,4 +181,3 @@ class ChannelFullFetchTest(LoggedInTestCase):
 
         self.assertRedirects(resp, reverse('admin'))
         self.assertTrue(messages_patch.success.called)
-        self.assertTrue(does_channel_author_exist_patch.called)
