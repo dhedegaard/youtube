@@ -55,7 +55,11 @@ class Channel(models.Model):
         Fetch new videos from the channel.
 
         If full_fetch is True all videos for the given channel is fetched.
+
+        Returns the number of videos fetched (if any).
         '''
+        fetched = 0
+
         next_page_token = None
         content_exists = True
 
@@ -104,7 +108,11 @@ class Channel(models.Model):
             # Read response as JSON and iterate on items updating/creating
             # Video objects as we go along.
             for item in data['items']:
+                fetched += 1
                 Video.objects.create_or_update(self, item)
+
+        # All done, return the number of videos fetched.
+        return fetched
 
     @property
     def url(self):

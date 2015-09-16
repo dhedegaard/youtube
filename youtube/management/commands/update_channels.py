@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import logging
 import time
 
@@ -12,8 +13,18 @@ logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--full', dest='full', action='store_true',
+                            help='Do full fetch on all channels.')
+
+    def handle(self, *args, **options):
         logger.info('Starting')
+
+        # Check to see if we should do a full fetch or not.
+        full_fetch = options.get('full', False)
+        if full_fetch:
+            logger.warning('Doing full fetch on all channels, this might take '
+                           'a long time.')
 
         # Fetch the channels.
         channels = Channel.objects.all()
@@ -33,7 +44,7 @@ class Command(BaseCommand):
                         # Fetch data for the channel, updating if needed.
                         channel.update_channel_info()
                         # Fetch data about videos on the given channel.
-                        channel.fetch_videos()
+                        fetched = channel.fetch_videos(full_fetch=full_fetch)
                         channel.updated = timezone.now()
                         channel.save()
                     except requests.exceptions.RequestException as e:  # pragma: nocover  # NOQA
@@ -50,6 +61,7 @@ class Command(BaseCommand):
                     else:
                         # No exception, proceed with next channel.
                         break
+            logger.info('    fetched %s videos', fetched)
 
         # Iterate on all videos, checking HEAD state of thumbnail.
         logger.info('Marking deleted videos as deleted')

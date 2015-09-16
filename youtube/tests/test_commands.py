@@ -30,6 +30,17 @@ class UpdateChannelsTest(TestCase):
         self.assertTrue(fetch_videos_patch.called)
         self.assertTrue(update_channel_info_patch.called)
 
+    @mock.patch.object(Channel, 'update_channel_info')
+    @mock.patch.object(Channel, 'fetch_videos')
+    def test__single_channel__no_videos__full_fetch(
+            self, fetch_videos_patch, update_channel_info_patch):
+        Channel.objects.create()
+
+        call_command('update_channels', '--full')
+
+        self.assertTrue(fetch_videos_patch.called)
+        self.assertTrue(update_channel_info_patch.called)
+
     @mock.patch('youtube.management.commands.update_channels.requests')
     @mock.patch.object(Channel, 'update_channel_info')
     @mock.patch.object(Channel, 'fetch_videos')
