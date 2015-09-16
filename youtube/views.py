@@ -93,3 +93,22 @@ def toggle_hidden(request, channelid):
         'Visibility of channel <b>{0}</b> changed.',
         channel.title))
     return redirect('admin')
+
+
+@require_POST
+@login_required
+@transaction.atomic
+def channel_full_fetch(request, channelid):
+    # Fetch the channel.
+    channel = get_object_or_404(Channel, pk=channelid)
+
+    # Do the full update.
+    raise Exception('hej')
+    channel.update_channel_info()
+    channel.fetch_videos(full_fetch=True)
+
+    # Notify the user.
+    messages.success(request, format_html(
+        'Did a full fetch on channel <b>{0}</b>.',
+        channel.title))
+    return redirect('admin')

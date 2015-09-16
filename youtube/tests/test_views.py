@@ -91,10 +91,10 @@ class ChannelAddTest(LoggedInTestCase):
                             messages_patch):
         does_channel_author_exist_patch.return_value = True
 
-        with mock.patch.object(Channel,
-                        'update_channel_info') as channel_info_patch,\
-                mock.patch.object(Channel,
-                        'fetch_videos') as fetch_videos_patch:
+        with mock.patch.object(
+                Channel, 'update_channel_info') as channel_info_patch,\
+            mock.patch.object(
+                Channel, 'fetch_videos') as fetch_videos_patch:
 
             resp = self.client.post(reverse('channel-add'), {
                 'channel': 'testchannel',
@@ -155,3 +155,31 @@ class ToggleHiddenTest(LoggedInTestCase):
         self.assertTrue(messages_patch.success.called)
         channel = Channel.objects.get(pk=self.channel.pk)
         self.assertFalse(channel.hidden)
+
+
+class ChannelFullFetchTest(LoggedInTestCase):
+    def setUp(self):
+        super(ChannelFullFetchTest, self).setUp()
+        self.channel = Channel.objects.create()
+
+    @mock.patch('youtube.views.messages')
+    @mock.patch('youtube.forms.does_channel_author_exist')
+    def test__post__success(self, does_channel_author_exist_patch,
+                            messages_patch):
+        does_channel_author_exist_patch.return_value = True
+
+        with mock.patch.object(
+                Channel, 'update_channel_info') as channel_info_patch,\
+            mock.patch.object(
+                Channel, 'fetch_videos') as fetch_videos_patch:
+
+            resp = self.client.post(reverse('channel-full-fetch', kwargs={
+                'channelid': self.channel.pk,
+            }))
+
+            self.assertTrue(channel_info_patch.called)
+            self.assertTrue(fetch_videos_patch.called)
+
+        self.assertRedirects(resp, reverse('admin'))
+        self.assertTrue(messages_patch.success.called)
+        self.assertTrue(does_channel_author_exist_patch.called)

@@ -13,6 +13,8 @@ urlpatterns = patterns(
         name='channel-delete'),
     url(r'^admin/(?P<channelid>\d+)/toggle-hidden/$',
         views.toggle_hidden, name='toggle-hidden'),
+    url(r'^admin/(?P<channelid>\d+)/full-fetch/$',
+        views.channel_full_fetch, name='channel-full-fetch'),
     url(r'^admin/add/$', views.channel_add, name='channel-add'),
     url(r'^login/$', 'django.contrib.auth.views.login', {
         'template_name': 'youtube/login.html',
