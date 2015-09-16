@@ -60,3 +60,8 @@ div.item .viewcount {
     width: 24px;
     height: 24px;
 }
+
+.navbar-brand img {
+    margin-top: -2px;
+    display: inline-block;
+}
