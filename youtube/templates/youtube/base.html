@@ -31,18 +31,25 @@
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="collapse-navbar">
-                    {% if request.user.is_authenticated %}
                     <div class="navbar-right">
                         <ul class="nav navbar-nav">
+                            {% if request.user.is_authenticated %}
                             <li{% if page == 'admin' %} class="active"{% endif %}>
                                 <a href="{% url 'admin' %}">
                                     <i class="glyphicon glyphicon-cog"></i>
-                                    Admin
+                                    admin
                                 </a>
                             </li>
+                            {% else %}
+                            <li{% if page == 'admin' %} class="active"{% endif %}>
+                                <a href="{% url 'admin' %}">
+                                    <i class="glyphicon glyphicon-lock"></i>
+                                    login
+                                </a>
+                            </li>
+                            {% endif %}
                         </ul>
                     </div>
-                    {% endif %}
                     <ul class="nav navbar-nav">
                         {% visible_channels as channels %}
                         {% if channels %}
