@@ -53,8 +53,12 @@
             {% endif %}
         </td>
         <td>
-            <a href="{{ channel.url }}">
+            <a href="{% url 'channel' author=channel.author %}"
+               title="Show videos for the channel">
                 {{ channel.title }}
+            </a>
+            <a href="{{ channel.url }}" title="Go to youtube channel">
+                <i class="glyphicon glyphicon-link"></i>
             </a>
         </td>
         <td>
