@@ -64,9 +64,9 @@ class Command(BaseCommand):
                         break
             logger.info('    fetched %s videos', fetched)
 
-        # Iterate on all videos, checking HEAD state of thumbnail.
+        # Iterate on the last 500 videos, checking HEAD state of thumbnail.
         logger.info('Marking deleted videos as deleted')
-        for video in Video.objects.exclude_deleted():
+        for video in Video.objects.exclude_deleted().order_by('-id')[:500]:
             with transaction.atomic():
                 # Do HTTP HEAD request, to fetch status code without body.
                 resp = requests.head(video.get_thumbnail())
