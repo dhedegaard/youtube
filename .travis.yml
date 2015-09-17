@@ -5,6 +5,7 @@ python:
  - 3.2
  - 3.3
  - 3.4
+ - 3.5
  - pypy
  - pypy3
  - nightly
@@ -16,8 +17,8 @@ matrix:
     - python: nightly
 
 env:
-- DJANGO_VERSION=1.7.9
-- DJANGO_VERSION=1.8.3
+- DJANGO_VERSION=1.7
+- DJANGO_VERSION=1.8
 
 install:
 - pip install -q -r requirements.txt
