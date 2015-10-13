@@ -50,15 +50,6 @@
                 <img src="{{ video.uploader.thumbnail }}" />
                 {{ video.uploader.title|default:video.uploader.author|truncatechars:13 }}
             </a>
-            <br />
-            <small>
-            Rating:
-            {% if video.rating %}
-                {{ video.rating|floatformat:'1' }}
-            {% else %}
-                ?
-            {% endif %}
-            </small>
         </div>
     </div>
     {% if forloop.index|divisibleby:'6' and not forloop.first or forloop.last %}</div>{% endif %}

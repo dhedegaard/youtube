@@ -7,8 +7,6 @@ from django.conf import settings
 from django.utils import timezone
 from isodate import parse_duration
 
-from .utils import calculate_rating
-
 
 class Channel(models.Model):
     author = models.TextField(unique=True)
@@ -178,8 +176,6 @@ class VideoQuerySet(models.QuerySet):
         # Fetch video details, if it exists.
         youtubeid = data['id']
         video = Video.objects.filter(youtubeid=youtubeid).first()
-        rating = calculate_rating(data['statistics']['likeCount'],
-                                  data['statistics']['dislikeCount'])
         duration = parse_duration(data['contentDetails']['duration'])
 
         if not video:
@@ -191,10 +187,6 @@ class VideoQuerySet(models.QuerySet):
                 category_id=data['snippet']['categoryId'],
                 description=data['snippet']['description'],
                 duration=duration.total_seconds(),
-                rating=rating or 0.0,
-                like_count=data['statistics']['likeCount'],
-                rating_count=(int(data['statistics']['likeCount']) +
-                              int(data['statistics']['dislikeCount'])),
                 view_count=data['statistics']['viewCount'],
                 favorite_count=data['statistics']['favoriteCount'],
                 comment_count=data['statistics']['commentCount'],
@@ -204,10 +196,6 @@ class VideoQuerySet(models.QuerySet):
         else:
             video.title = data['snippet']['title']
             video.description = data['snippet']['description']
-            video.rating = rating or 0.0
-            video.like_count = data['statistics']['likeCount']
-            video.rating_count = (int(data['statistics']['likeCount']) +
-                                  int(data['statistics']['dislikeCount']))
             video.view_count = data['statistics']['viewCount']
             video.favorite_count = data['statistics']['favoriteCount']
             video.comment_count = data['statistics']['commentCount']
@@ -226,9 +214,6 @@ class Video(models.Model):
     title = models.TextField(default='')
     duration = models.IntegerField(default=0)  # in seconds
     category = models.ForeignKey(Category, related_name='videos')
-    rating = models.DecimalField(max_digits=10, decimal_places=8, default=0.0)
-    rating_count = models.IntegerField(default=0)
-    like_count = models.IntegerField(default=0)
     view_count = models.IntegerField(default=0)
     favorite_count = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)

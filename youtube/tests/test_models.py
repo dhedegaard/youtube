@@ -146,8 +146,6 @@ class VideoQuerySetTest(TestCase):
         self.videodata = {
             'id': 'abcdef',
             'statistics': {
-                'likeCount': 200,
-                'dislikeCount': 250,
                 'viewCount': 1000,
                 'favoriteCount': 20,
                 'commentCount': 15,
@@ -170,11 +168,9 @@ class VideoQuerySetTest(TestCase):
 
         self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
         video = Video.objects.get(youtubeid='abcdef')
-        self.assertEqual(video.rating, Decimal('2.2'))
         self.assertEqual(video.duration, 3 * 60 + 40)
         self.assertEqual(video.uploader, self.channel)
         self.assertEqual(video.category, self.category)
-        self.assertEqual(video.like_count, 200)
         self.assertEqual(video.view_count, 1000)
         self.assertEqual(video.favorite_count, 20)
         self.assertEqual(video.comment_count, 15)
@@ -195,11 +191,9 @@ class VideoQuerySetTest(TestCase):
 
         self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
         video = Video.objects.get(youtubeid='abcdef')
-        self.assertEqual(video.rating, Decimal('2.2'))
         self.assertEqual(video.duration, 123)
         self.assertEqual(video.uploader, self.channel)
         self.assertEqual(video.category, self.category)
-        self.assertEqual(video.like_count, 200)
         self.assertEqual(video.view_count, 1000)
         self.assertEqual(video.favorite_count, 20)
         self.assertEqual(video.comment_count, 15)
