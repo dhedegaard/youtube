@@ -91,12 +91,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 from django.conf import settings
-if isinstance(settings.TEMPLATE_CONTEXT_PROCESSORS, list):
+if isinstance(settings.TEMPLATE_CONTEXT_PROCESSORS, list):  # pragma: nocover
     # Fix for change of type in Django 1.9
     TEMPLATE_CONTEXT_PROCESSORS = settings.TEMPLATE_CONTEXT_PROCESSORS + [
         'django.core.context_processors.request',
     ]
-else:
+else:  # pragma: nocover
     # Type of setting is a tuple pre 1.9
     TEMPLATE_CONTEXT_PROCESSORS = settings.TEMPLATE_CONTEXT_PROCESSORS + (
         'django.core.context_processors.request',
