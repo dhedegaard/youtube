@@ -98,6 +98,30 @@ class ChannelTest(TestCase):
         self.assertTrue(requests_patch.get().raise_for_status.called)
         self.assertTrue(requests_patch.get().json.called)
 
+    @mock.patch('youtube.models.requests')
+    @mock.patch.object(Category.objects, 'get_categoryids')
+    @mock.patch.object(Video.objects, 'create_or_update')
+    def test__fetch_videos__full_fetch(self, create_or_update_patch,
+                           get_categoryids_patch, requests_patch):
+        requests_patch.get().json.return_value = {
+            'items': [{
+                'snippet': {
+                    'categoryId': 1,
+                },
+                'contentDetails': {
+                    'videoId': 'abcdef',
+                },
+            }],
+        }
+
+        self.channel.fetch_videos(full_fetch=True)
+
+        self.assertTrue(get_categoryids_patch.called)
+        self.assertTrue(create_or_update_patch.called)
+        self.assertTrue(requests_patch.get.called)
+        self.assertTrue(requests_patch.get().raise_for_status.called)
+        self.assertTrue(requests_patch.get().json.called)
+
 
 class CategoryQuerySetTest(TestCase):
     def test__empty_ids(self):
