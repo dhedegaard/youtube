@@ -98,16 +98,23 @@ def toggle_hidden(request, channelid):
 @require_POST
 @login_required
 @transaction.atomic
-def channel_full_fetch(request, channelid):
+def channel_fetch(request, channelid, full_fetch=False):
     # Fetch the channel.
     channel = get_object_or_404(Channel, pk=channelid)
 
     # Do the full update.
     channel.update_channel_info()
-    channel.fetch_videos(full_fetch=True)
+    channel.fetch_videos(full_fetch=full_fetch)
 
     # Notify the user.
-    messages.success(request, format_html(
-        'Did a full fetch on channel <b>{0}</b>.',
-        channel.title))
+    if full_fetch:
+        messages.success(request, format_html(
+            'Did a full fetch on channel <b>{0}</b>.',
+            channel.title))
+    else:
+        messages.success(request, format_html(
+            'Did a fast fetch on channel <b>{0}</b>.',
+            channel.title))
+
+    # All done
     return redirect('admin')

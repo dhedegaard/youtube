@@ -178,6 +178,36 @@ class ChannelFullFetchTest(LoggedInTestCase):
 
             self.assertTrue(channel_info_patch.called)
             self.assertTrue(fetch_videos_patch.called)
+            self.assertEqual(fetch_videos_patch.call_args,
+                             mock.call(full_fetch=True))
+
+        self.assertRedirects(resp, reverse('admin'))
+        self.assertTrue(messages_patch.success.called)
+
+
+class ChannelFetchTest(LoggedInTestCase):
+    def setUp(self):
+        super(ChannelFetchTest, self).setUp()
+        self.channel = Channel.objects.create(
+            author='testauthor',
+            title='testtitle',
+        )
+
+    @mock.patch('youtube.views.messages')
+    def test__post__success(self, messages_patch):
+        with mock.patch.object(
+                Channel, 'update_channel_info') as channel_info_patch,\
+            mock.patch.object(
+                Channel, 'fetch_videos') as fetch_videos_patch:
+
+            resp = self.client.post(reverse('channel-fetch', kwargs={
+                'channelid': self.channel.pk,
+            }))
+
+            self.assertTrue(channel_info_patch.called)
+            self.assertTrue(fetch_videos_patch.called)
+            self.assertEqual(fetch_videos_patch.call_args,
+                             mock.call(full_fetch=False))
 
         self.assertRedirects(resp, reverse('admin'))
         self.assertTrue(messages_patch.success.called)

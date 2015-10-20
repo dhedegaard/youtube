@@ -76,22 +76,33 @@
                 action="{% url 'toggle-hidden' channelid=channel.pk %}">
                 {% csrf_token %}
                 {% if channel.hidden %}
-                <button class="btn btn-xs btn-success">
+                <button class="btn btn-xs btn-success"
+                        title="Show channel">
                     <i class="glyphicon glyphicon-eye-open"></i>
-                    Show channel
+                    Show
                 </button>
                 {% else %}
-                <button class="btn btn-xs btn-warning">
+                <button class="btn btn-xs btn-warning"
+                        title="Hide channel">
                     <i class="glyphicon glyphicon-eye-close"></i>
-                    Hide channel
+                    Hide
                 </button>
                 {% endif %}
             </form>
             <form class="form form-inline inline" method="POST"
+                action="{% url 'channel-fetch' channelid=channel.pk %}">
+                {% csrf_token %}
+                <button class="btn btn-xs btn-primary" title="Does a fast fetch of the latest videos on the channel">
+                    <i class="glyphicon glyphicon-refresh"></i>
+                    Fast fetch
+                </button>
+            </form>
+            <form class="form form-inline inline" method="POST"
                 action="{% url 'channel-full-fetch' channelid=channel.pk %}">
                 {% csrf_token %}
-                <button class="btn btn-xs btn-info" title="Does a full fetch of all videos on the channel">
-                    <i class="glyphicon glyphicon-refresh"></i>
+                <button class="btn btn-xs btn-info" title="Does a full fetch of all videos on the channel"
+                        onclick="return confirm('Are you sure you want to do a full fetch ? It might take a long time.');">
+                    <i class="glyphicon glyphicon-retweet"></i>
                     Full update
                 </button>
             </form>
