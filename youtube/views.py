@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.utils.html import format_html
 from django.views.decorators.http import require_POST
 from django.db import transaction
+from django.db.models import Count
 
 from .models import Video, Channel
 from .forms import AddChannelForm
@@ -42,7 +43,7 @@ def admin(request):
     form = AddChannelForm(request.POST or None)
     return render(request, 'youtube/admin.html', {
         'admin_channels': (Channel.objects.
-                           prefetch_related('videos').
+                           annotate(videocount=Count('videos')).
                            order_by('hidden', 'title')),
         'form': form,
         'page': 'admin',

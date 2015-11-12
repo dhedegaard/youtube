@@ -10,10 +10,10 @@ from isodate import parse_duration
 
 class Channel(models.Model):
     author = models.TextField(unique=True)
-    title = models.TextField(default='')
+    title = models.TextField(default='', db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
-    hidden = models.BooleanField(default=False)
+    hidden = models.BooleanField(default=False, db_index=True)
     tags = models.ManyToManyField('Tag', related_name='channels')
     thumbnail = models.TextField(default='')
     uploads_playlist = models.TextField(default='')
@@ -217,7 +217,7 @@ class Video(models.Model):
     view_count = models.IntegerField(default=0)
     favorite_count = models.IntegerField(default=0)
     comment_count = models.IntegerField(default=0)
-    uploaded = models.DateTimeField()
+    uploaded = models.DateTimeField(db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField()
     description = models.TextField(default='')
