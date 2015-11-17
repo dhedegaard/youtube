@@ -6,6 +6,10 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:site_name" content="Youtube" />
+        <meta property="og:url" content="{{ full_url }}" />
+        <meta property="og:title" content="{% if title %}{{ title }}{% else %}New youtube videos{% endif %}" />
+        <meta property="og:description" content="Aggregating youtube videos since 2015" />
         <title>{% if title %}{{ title }}{% else %}New youtube videos{% endif %}</title>
         <link rel="shortcut icon" href="{% static 'youtube/favicon.ico' %}" />
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -56,6 +60,7 @@
                         <li class="dropdown{% if page == 'channel' %} active{% endif %}">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"
                                role="button" aria-expanded="false">
+                               <i class="glyphicon glyphicon-user"></i>
                                Channels
                                <span class="caret"></span>
                             </a>
@@ -106,5 +111,6 @@
         <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="{% static 'youtube/youtube.js' %}"></script>
+        {% block footer %}{% endblock %}
     </body>
 </html>

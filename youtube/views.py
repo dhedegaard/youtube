@@ -17,6 +17,7 @@ def index(request):
                    filter(uploader__hidden=False).
                    exclude_deleted().
                    prefetch_related('uploader')),
+        'full_url': request.build_absolute_uri(request.get_full_path()),
     })
 
 
@@ -35,6 +36,7 @@ def channel(request, author):
     return render(request, 'youtube/index.html', {
         'videos': channel.videos.exclude_deleted(),
         'channel': channel,
+        'full_url': request.build_absolute_uri(request.get_full_path()),
     })
 
 
@@ -47,6 +49,7 @@ def admin(request):
                            order_by('hidden', 'title')),
         'form': form,
         'page': 'admin',
+        'full_url': request.build_absolute_uri(request.get_full_path()),
     })
 
 
