@@ -14,7 +14,7 @@ matrix:
     - python: pypy
     - python: pypy3
     - python: nightly
-    - env: DJANGO_VERSION=1.9b1
+    - env: DJANGO_VERSION=1.9rc1
   exclude:
     # Django 1.7 is not supported on python 3.5.
     - python: 3.5
@@ -24,7 +24,7 @@ matrix:
 env:
 - DJANGO_VERSION=1.7.10
 - DJANGO_VERSION=1.8.4
-- DJANGO_VERSION=1.9b1
+- DJANGO_VERSION=1.9rc1
 
 install:
 - pip install -q -r requirements.txt
