@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 import datetime
-from decimal import Decimal
 
 import mock
 from django.test import TestCase
@@ -172,7 +171,6 @@ class VideoQuerySetTest(TestCase):
             'statistics': {
                 'viewCount': 1000,
                 'favoriteCount': 20,
-                'commentCount': 15,
             },
             'contentDetails': {
                 'duration': 'PT3M40S',
@@ -197,7 +195,6 @@ class VideoQuerySetTest(TestCase):
         self.assertEqual(video.category, self.category)
         self.assertEqual(video.view_count, 1000)
         self.assertEqual(video.favorite_count, 20)
-        self.assertEqual(video.comment_count, 15)
         self.assertEqual(video.uploaded, uploaded)
         self.assertEqual(video.updated, uploaded)
 
@@ -220,6 +217,5 @@ class VideoQuerySetTest(TestCase):
         self.assertEqual(video.category, self.category)
         self.assertEqual(video.view_count, 1000)
         self.assertEqual(video.favorite_count, 20)
-        self.assertEqual(video.comment_count, 15)
         self.assertIsNotNone(video.uploaded)
         self.assertEqual(video.updated, uploaded)

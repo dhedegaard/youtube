@@ -189,7 +189,6 @@ class VideoQuerySet(models.QuerySet):
                 duration=duration.total_seconds(),
                 view_count=data['statistics']['viewCount'],
                 favorite_count=data['statistics']['favoriteCount'],
-                comment_count=data['statistics']['commentCount'],
                 uploaded=dateutil.parser.parse(data['snippet']['publishedAt']),
                 updated=dateutil.parser.parse(data['snippet']['publishedAt']),
             )
@@ -198,7 +197,6 @@ class VideoQuerySet(models.QuerySet):
             video.description = data['snippet']['description']
             video.view_count = data['statistics']['viewCount']
             video.favorite_count = data['statistics']['favoriteCount']
-            video.comment_count = data['statistics']['commentCount']
             video.updated = dateutil.parser.parse(
                 data['snippet']['publishedAt'])
             video.save()
@@ -216,7 +214,6 @@ class Video(models.Model):
     category = models.ForeignKey(Category, related_name='videos')
     view_count = models.IntegerField(default=0)
     favorite_count = models.IntegerField(default=0)
-    comment_count = models.IntegerField(default=0)
     uploaded = models.DateTimeField(db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField()
