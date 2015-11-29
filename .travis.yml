@@ -7,24 +7,23 @@ python:
  - 3.5
  - pypy
  - pypy3
- - nightly
 
 matrix:
   allow_failures:
     - python: pypy
     - python: pypy3
     - python: nightly
-    - env: DJANGO_VERSION=1.9rc1
+    - env: DJANGO_VERSION=1.9rc2
   exclude:
     # Django 1.7 is not supported on python 3.5.
     - python: 3.5
-      env: DJANGO_VERSION=1.7.10
+      env: DJANGO_VERSION=1.7.11
 
 
 env:
-- DJANGO_VERSION=1.7.10
-- DJANGO_VERSION=1.8.4
-- DJANGO_VERSION=1.9rc1
+- DJANGO_VERSION=1.7.11
+- DJANGO_VERSION=1.8.7
+- DJANGO_VERSION=1.9rc2
 
 install:
 - pip install -q -r requirements.txt
