@@ -12,7 +12,6 @@ matrix:
   allow_failures:
     - python: pypy
     - python: pypy3
-    - env: DJANGO_VERSION=1.9rc2
   exclude:
     # Django 1.7 is not supported on python 3.5.
     - python: 3.5
