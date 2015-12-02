@@ -1,4 +1,4 @@
-Django==1.8.7
+Django==1.9
 python-dateutil==2.4.2
 requests==2.8.1
 -e git://github.com/gungorbudak/django-endless-pagination.git@58437d6cebee64c4ce3dec4854dca0cc4f64baa4#egg=django-endless-pagination
