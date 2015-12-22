@@ -1,6 +1,6 @@
 Django==1.9
 python-dateutil==2.4.2
-requests==2.9.0
+requests==2.9.1
 -e git://github.com/gungorbudak/django-endless-pagination.git@58437d6cebee64c4ce3dec4854dca0cc4f64baa4#egg=django-endless-pagination
 isodate==0.5.4
 mock==1.3.0
