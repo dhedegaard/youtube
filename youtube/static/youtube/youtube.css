@@ -33,8 +33,9 @@ div.item .uploader {
     margin: 0 1px;
 }
 
-div.item .viewcount {
+div.item .uploaded {
     margin: 0 1px;
+    font-size: 80%;
 }
 
 .title {

@@ -34,9 +34,9 @@
             </small>
         </div>
         <div class="text-right pull-right text-muted text-nowrap">
-            <small class="viewcount" title="{{ video.uploaded|date:'Y-m-d H:i' }}">
-            {{ video.view_count|intcomma|default:'?' }}
-            views
+            <small class="uploaded" title="Uploaded: {{ video.uploaded|date:'Y-m-d H:i' }}
+Views: {{ video.view_count|intcomma|default:0 }}">
+            {{ video.uploaded|naturalday|default:"" }}
             </small>
         </div>
         <div class="uploader nowrap text-left">
