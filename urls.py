@@ -1,12 +1,11 @@
 from __future__ import unicode_literals
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth import views as auth_views
 
 from youtube import views
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^channel/(?P<author>.+)/$', views.channel, name='channel'),
     url(r'^admin/$', views.admin, name='admin'),
@@ -29,4 +28,4 @@ urlpatterns = patterns(
         'next_page': '/',
         'current_app': 'youtube',
     }, name='logout'),
-)
+]
