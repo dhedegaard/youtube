@@ -7,11 +7,13 @@ python:
  - 3.5
  - pypy
  - pypy3
+ - nightly
 
 matrix:
   allow_failures:
     - python: pypy
     - python: pypy3
+    - python: nightly
   exclude:
     # Django 1.9 does not work on python 3.3.
     - python: 3.3
