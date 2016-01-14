@@ -13,14 +13,10 @@ matrix:
     - python: pypy
     - python: pypy3
   exclude:
-    # Django 1.7 is not supported on python 3.5.
-    - python: 3.5
-      env: DJANGO_VERSION=1.7.11
     # Django 1.9 does not work on python 3.3.
     - python: 3.3
       env: DJANGO_VERSION=1.9.1
 env:
-- DJANGO_VERSION=1.7.11
 - DJANGO_VERSION=1.8.7
 - DJANGO_VERSION=1.9.1
 
