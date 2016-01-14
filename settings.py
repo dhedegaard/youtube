@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    'endless_pagination',
+    'el_pagination',
 
     'youtube',
 )
