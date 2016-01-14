@@ -165,7 +165,7 @@ class Category(models.Model):
     category = models.TextField(unique=True)
 
     def __unicode__(self):
-        return unicode(self.category)
+        return self.category
 
 
 class VideoQuerySet(models.QuerySet):
@@ -236,7 +236,7 @@ class Video(models.Model):
         }
 
     def __unicode__(self):
-        return unicode(self.youtubeid)
+        return str(self.youtubeid)
 
     def save(self, *args, **kwargs):
         if not self.uploaded:
