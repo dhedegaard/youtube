@@ -33,7 +33,7 @@ install:
 - if [[ $DJANGO_VERSION == "LATEST" ]]; then pip install -U Django; fi
 
 before_script:
-  flake8 .
+  flake8 . | true
 
 script: coverage run --source=. manage.py test
 
