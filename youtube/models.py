@@ -14,7 +14,6 @@ class Channel(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
     hidden = models.BooleanField(default=False, db_index=True)
-    tags = models.ManyToManyField('Tag', related_name='channels')
     thumbnail = models.TextField(default='')
     uploads_playlist = models.TextField(default='')
 
@@ -246,9 +245,3 @@ class Video(models.Model):
             self.updated = self.uploaded
 
         super(Video, self).save(*args, **kwargs)
-
-
-class Tag(models.Model):
-    name = models.TextField(unique=True, verbose_name='Tagname')
-    background_color = models.TextField(
-        default='#777', verbose_name='Background color')
