@@ -24,8 +24,6 @@ SECRET_KEY = '%vuf@d-=$+a7i$smt(t^ty3eqb^1sk*&qcfxxp4+(a2zor*_^e'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -90,17 +88,24 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-from django.conf import settings
-if isinstance(settings.TEMPLATE_CONTEXT_PROCESSORS, list):  # pragma: nocover
-    # Fix for change of type in Django 1.9
-    TEMPLATE_CONTEXT_PROCESSORS = settings.TEMPLATE_CONTEXT_PROCESSORS + [
-        'django.core.context_processors.request',
-    ]
-else:  # pragma: nocover
-    # Type of setting is a tuple pre 1.9
-    TEMPLATE_CONTEXT_PROCESSORS = settings.TEMPLATE_CONTEXT_PROCESSORS + (
-        'django.core.context_processors.request',
-    )
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.contrib.auth.context_processors.auth',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.media',
+                'django.template.context_processors.static',
+                'django.template.context_processors.tz',
+                'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.request',
+            ],
+        },
+    },
+]
 
 LOGGING = {
     'version': 1,
