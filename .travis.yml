@@ -22,8 +22,11 @@ env:
 
 install:
 - pip install -q -r requirements.txt
-- pip install -q coveralls codecov
+- pip install -q coveralls codecov flake8
 - pip install -q Django==$DJANGO_VERSION
+
+before_script:
+  flake8 .
 
 script: coverage run --source=. manage.py test
 
