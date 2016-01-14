@@ -56,7 +56,9 @@ class Command(BaseCommand):
                         logger.warning(
                             'Got exception trying to fetch youtube data')
                         logger.exception(e)
-                        logger.error('Body: %s', e.response.text)
+                        logger.error('Body: %s', (
+                            e.response.text if hasattr(e, 'response')
+                            else '<no response object on exception>'))
                         # Wait for a second before trying again.
                         time.sleep(5)
                     else:
