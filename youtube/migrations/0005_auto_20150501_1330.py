@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
             name='Tag',
             fields=[
                 ('id', models.AutoField(
-                    verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                    verbose_name='ID', serialize=False, auto_created=True,
+                    primary_key=True)),
                 ('name', models.TextField(
                     unique=True, verbose_name='Tagname')),
                 ('background_color', models.TextField(

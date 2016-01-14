@@ -44,7 +44,8 @@ class AddChanelFormTest(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertTrue('channel' in form.errors)
-        self.assertEqual(form.errors['channel'][0], 'Channel already exists in the system '
+        self.assertEqual(form.errors['channel'][0],
+                         'Channel already exists in the system '
                          'under the title: <b>Test Channel</b>')
 
     @mock.patch('youtube.forms.does_channel_author_exist')

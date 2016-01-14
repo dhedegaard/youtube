@@ -100,8 +100,9 @@ class ChannelTest(TestCase):
     @mock.patch('youtube.models.requests')
     @mock.patch.object(Category.objects, 'get_categoryids')
     @mock.patch.object(Video.objects, 'create_or_update')
-    def test__fetch_videos__full_fetch(self, create_or_update_patch,
-                           get_categoryids_patch, requests_patch):
+    def test__fetch_videos__full_fetch(
+            self, create_or_update_patch, get_categoryids_patch,
+            requests_patch):
         requests_patch.get().json.return_value = {
             'items': [{
                 'snippet': {
