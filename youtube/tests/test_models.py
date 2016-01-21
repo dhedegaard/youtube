@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
+import os
 import datetime
-
+import unittest
 import mock
 from django.test import TestCase
 from django.utils import timezone
@@ -184,6 +185,7 @@ class VideoQuerySetTest(TestCase):
             },
         }
 
+    @unittest.skipIf(os.name == 'nt', 'Windows does not support timezones')
     def test__create_or_update__new_video(self):
         Video.objects.create_or_update(self.channel, self.videodata)
         uploaded = timezone.make_aware(
@@ -199,6 +201,7 @@ class VideoQuerySetTest(TestCase):
         self.assertEqual(video.uploaded, uploaded)
         self.assertEqual(video.updated, uploaded)
 
+    @unittest.skipIf(os.name == 'nt', 'Windows does not support timezones')
     def test__create_or_update__existing_video(self):
         video = Video.objects.create(
             youtubeid='abcdef',
