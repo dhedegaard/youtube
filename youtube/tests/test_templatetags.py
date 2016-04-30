@@ -1,6 +1,7 @@
 from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 from django.test import TestCase
+from freezegun import freeze_time
 
 from ..templatetags.pretty_duration import pretty_duration
 from ..templatetags.youtubetags import timesince_short
@@ -14,6 +15,7 @@ class PrettyDurationTest(TestCase):
         self.assertEqual(pretty_duration(9313.0), '02:35:13')
 
 
+@freeze_time('2000-01-01')
 class TimesinceShortTest(TestCase):
     def setUp(self):
         self.now = timezone.now()

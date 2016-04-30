@@ -28,7 +28,7 @@ env:
 
 install:
 - pip install -q -r requirements.txt
-- pip install -q coveralls codecov flake8
+- pip install -q -r requirements-dev.txt
 - if [[ $DJANGO_VERSION != "LATEST" ]]; then pip install -q Django==$DJANGO_VERSION; fi
 - if [[ $DJANGO_VERSION == "LATEST" ]]; then pip install -U Django; fi
 
