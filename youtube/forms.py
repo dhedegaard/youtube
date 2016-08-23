@@ -16,7 +16,7 @@ class AddChannelForm(forms.Form):
 
         # If the channel is an URL, convert the URL to the channel name
         # expected by the system.
-        rc = re.findall(r'^https:\/\/www.youtube.com\/user\/([^\/]+)\/?.*?$',
+        rc = re.findall(r'^https:\/\/www.youtube.com\/(?:user|channel)\/([^\/]+)\/?.*?$',
                         channel, re.I | re.U)
         if rc:
             channel = rc[0]

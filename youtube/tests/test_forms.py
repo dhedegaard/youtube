@@ -32,6 +32,17 @@ class AddChanelFormTest(TestCase):
         self.assertEqual(form.cleaned_data['channel'], 'testuser')
         self.assertTrue(does_channel_author_exist_patch.called)
 
+    @mock.patch('youtube.forms.does_channel_author_exist')
+    def test__fetch_from_url_no_slash(self, does_channel_author_exist_patch):
+        does_channel_author_exist_patch.return_value = True
+
+        form = AddChannelForm({
+            'channel': 'https://www.youtube.com/channel/testuser/videos',
+        })
+
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['channel'], 'testuser')
+        self.assertTrue(does_channel_author_exist_patch.called)
     def test__fetch_existing_channel(self):
         Channel.objects.create(
             author='testchannel',
