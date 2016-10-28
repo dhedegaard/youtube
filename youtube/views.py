@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.utils.html import format_html
 from django.views.decorators.http import require_POST
 from django.db import transaction
-from django.db.models import Count
+from django.db.models import Count, Q
 
 from .models import Video, Channel
 from .forms import AddChannelForm
@@ -30,7 +30,8 @@ def channel(request, author):
         qs = qs.filter(hidden=False)
 
     # Fetch the channel, or 404.
-    channel = get_object_or_404(qs, author=author)
+    channel = get_object_or_404(qs.filter(
+        Q(Q(author=author) | Q(channelid=author))))
 
     # Render and return.
     return render(request, 'youtube/index.html', {
@@ -75,7 +76,10 @@ def channel_add(request):
     if not form.is_valid():
         return admin(request)
 
-    channel = Channel.objects.create(author=form.cleaned_data['channel'])
+    channel = Channel.objects.create(
+        channelid=form.cleaned_data['channelid'],
+        author=form.cleaned_data['channel'],
+    )
     channel.update_channel_info()
     channel.fetch_videos()
 

@@ -9,7 +9,8 @@ from isodate import parse_duration
 
 
 class Channel(models.Model):
-    author = models.TextField(unique=True)
+    channelid = models.TextField(unique=True)
+    author = models.TextField(unique=True, null=True)
     title = models.TextField(default='', db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now_add=True)
@@ -28,7 +29,7 @@ class Channel(models.Model):
         resp = requests.get(
             'https://www.googleapis.com/youtube/v3/channels', params={
                 'part': 'snippet,contentDetails',
-                'forUsername': self.author,
+                'id': self.channelid,
                 'key': settings.YOUTUBE_API_KEY,
             }
         )

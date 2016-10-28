@@ -4,7 +4,7 @@ import re
 from django import forms
 from django.utils.html import format_html
 
-from .utils import does_channel_author_exist
+from .utils import fetch_channel_id_for_author, check_channel_id_exists
 from .models import Channel
 
 
@@ -30,10 +30,16 @@ class AddChannelForm(forms.Form):
                 '<b>{0}</b>',
                 existing_channel.title))
 
-        # Check to see if the channel is valid in the API.
-        if not does_channel_author_exist(channel):
+        # Check to see if the channel is an author.
+        channelid = fetch_channel_id_for_author(channel)
+        # Check to see if the channel already is a channel id.
+        if not channelid and check_channel_id_exists(channel):
+            channelid = channel
+        # Otherwise notify the user of unknown input.
+        if not channelid:
             raise forms.ValidationError(format_html(
                 'Channel does not seem to exist: <b>{0}</b>',
                 channel))
+        self.cleaned_data['channelid'] = channelid
 
         return channel

@@ -86,10 +86,10 @@ class ChannelDeleteTest(LoggedInTestCase):
 
 class ChannelAddTest(LoggedInTestCase):
     @mock.patch('youtube.views.messages')
-    @mock.patch('youtube.forms.does_channel_author_exist')
-    def test__post__success(self, does_channel_author_exist_patch,
+    @mock.patch('youtube.forms.fetch_channel_id_for_author')
+    def test__post__success(self, fetch_channel_id_for_author_patch,
                             messages_patch):
-        does_channel_author_exist_patch.return_value = True
+        fetch_channel_id_for_author_patch.return_value = 1234
 
         with mock.patch.object(
                 Channel, 'update_channel_info') as channel_info_patch,\
@@ -105,12 +105,18 @@ class ChannelAddTest(LoggedInTestCase):
 
         self.assertRedirects(resp, reverse('admin'))
         self.assertTrue(messages_patch.success.called)
-        self.assertTrue(does_channel_author_exist_patch.called)
-        self.assertTrue(Channel.objects.filter(author='testchannel').exists())
+        self.assertTrue(fetch_channel_id_for_author_patch.called)
+        channel = Channel.objects.filter(author='testchannel').first()
+        self.assertIsNotNone(channel)
+        self.assertEqual(channel.channelid, '1234')
 
-    @mock.patch('youtube.forms.does_channel_author_exist')
-    def test__post__does_not_exist(self, does_channel_author_exist_patch):
-        does_channel_author_exist_patch.return_value = False
+    @mock.patch('youtube.forms.fetch_channel_id_for_author')
+    @mock.patch('youtube.forms.check_channel_id_exists')
+    def test__post__does_not_exist(
+            self, check_channel_id_exists_patch,
+            fetch_channel_id_for_author_patch):
+        fetch_channel_id_for_author_patch.return_value = False
+        check_channel_id_exists_patch.return_value = False
 
         resp = self.client.post(reverse('channel-add'), {
             'channel': 'testchannel',
@@ -121,7 +127,8 @@ class ChannelAddTest(LoggedInTestCase):
         self.assertFormError(
             resp, 'form', 'channel',
             'Channel does not seem to exist: <b>testchannel</b>')
-        self.assertTrue(does_channel_author_exist_patch.called)
+        self.assertTrue(fetch_channel_id_for_author_patch.called)
+        self.assertTrue(check_channel_id_exists_patch.called)
 
 
 class ToggleHiddenTest(LoggedInTestCase):
