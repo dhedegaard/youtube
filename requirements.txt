@@ -1,6 +1,6 @@
 Django==1.10.3
 python-dateutil==2.6.0
-requests==2.12.2
+requests==2.12.3
 django-el-pagination==3.0.1
 isodate==0.5.4
 mock==2.0.0
