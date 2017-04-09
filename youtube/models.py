@@ -169,6 +169,7 @@ class Category(models.Model):
 
 
 class VideoQuerySet(models.QuerySet):
+
     def exclude_deleted(self):
         return self.exclude(deleted=True)
 
@@ -187,15 +188,15 @@ class VideoQuerySet(models.QuerySet):
                 category_id=data['snippet']['categoryId'],
                 description=data['snippet']['description'],
                 duration=duration.total_seconds(),
-                view_count=data['statistics']['viewCount'],
-                favorite_count=data['statistics']['favoriteCount'],
+                view_count=data.get('statistics', {}).get('viewCount'),
+                favorite_count=data.get('statistics', {}).get('favoriteCount'),
                 uploaded=dateutil.parser.parse(data['snippet']['publishedAt']),
                 updated=dateutil.parser.parse(data['snippet']['publishedAt']),
             )
         else:
             video.title = data['snippet']['title']
             video.description = data['snippet']['description']
-            video.view_count = data['statistics']['viewCount']
+            video.view_count = data.get('statistics', {}).get('viewCount')
             video.favorite_count = data['statistics']['favoriteCount']
             video.updated = dateutil.parser.parse(
                 data['snippet']['publishedAt'])
@@ -212,8 +213,8 @@ class Video(models.Model):
     title = models.TextField(default='')
     duration = models.IntegerField(default=0)  # in seconds
     category = models.ForeignKey(Category, related_name='videos')
-    view_count = models.IntegerField(default=0)
-    favorite_count = models.IntegerField(default=0)
+    view_count = models.IntegerField(default=0, null=True)
+    favorite_count = models.IntegerField(default=0, null=True)
     uploaded = models.DateTimeField(db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField()
