@@ -209,10 +209,12 @@ class Video(models.Model):
     objects = VideoQuerySet.as_manager()
 
     youtubeid = models.TextField(unique=True)
-    uploader = models.ForeignKey(Channel, related_name='videos')
+    uploader = models.ForeignKey(
+        Channel, related_name='videos', on_delete=models.CASCADE)
     title = models.TextField(default='')
     duration = models.IntegerField(default=0)  # in seconds
-    category = models.ForeignKey(Category, related_name='videos')
+    category = models.ForeignKey(
+        Category, related_name='videos', on_delete=models.CASCADE)
     view_count = models.IntegerField(default=0, null=True)
     favorite_count = models.IntegerField(default=0, null=True)
     uploaded = models.DateTimeField(db_index=True)
