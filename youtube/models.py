@@ -197,7 +197,8 @@ class VideoQuerySet(models.QuerySet):
             video.title = data['snippet']['title']
             video.description = data['snippet']['description']
             video.view_count = data.get('statistics', {}).get('viewCount')
-            video.favorite_count = data['statistics']['favoriteCount']
+            video.favorite_count = data.get(
+                'statistics', {}).get('favoriteCount')
             video.updated = dateutil.parser.parse(
                 data['snippet']['publishedAt'])
             video.save()
