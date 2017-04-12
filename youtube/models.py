@@ -153,7 +153,10 @@ class CategoryQuerySet(models.QuerySet):
             categories = list(categories)
             for item in resp.json()['items']:
                 categories.append(self.get_or_create(
-                    id=item['id'], category=item['snippet']['title'])[0])
+                    id=item['id'],
+                    defaults={
+                        'category': item['snippet']['title'],
+                    })[0])
 
         return categories
 
@@ -190,9 +193,12 @@ class VideoQuerySet(models.QuerySet):
                 'description': data['snippet']['description'],
                 'duration': duration.total_seconds(),
                 'view_count': data.get('statistics', {}).get('viewCount'),
-                'favorite_count': data.get('statistics', {}).get('favoriteCount'),
-                'uploaded': dateutil.parser.parse(data['snippet']['publishedAt']),
-                'updated': dateutil.parser.parse(data['snippet']['publishedAt']),
+                'favorite_count': data.get(
+                    'statistics', {}).get('favoriteCount'),
+                'uploaded': dateutil.parser.parse(
+                    data['snippet']['publishedAt']),
+                'updated': dateutil.parser.parse(
+                    data['snippet']['publishedAt']),
             },
         )[0]
 
