@@ -1,8 +1,8 @@
 from __future__ import unicode_literals
-import os
 import datetime
-import unittest
 import mock
+
+import pytz
 from django.test import TestCase
 from django.utils import timezone
 
@@ -37,10 +37,11 @@ class ChannelTest(TestCase):
 
         self.channel.update_channel_info()
 
-        channel = Channel.objects.get(pk=self.channel.pk)
-        self.assertEqual(channel.title, 'testchannel')
-        self.assertEqual(channel.thumbnail, 'http://example.com/image.png')
-        self.assertEqual(channel.uploads_playlist, 'uploadschannelid')
+        self.channel.refresh_from_db()
+        self.assertEqual(self.channel.title, 'testchannel')
+        self.assertEqual(
+            self.channel.thumbnail, 'http://example.com/image.png')
+        self.assertEqual(self.channel.uploads_playlist, 'uploadschannelid')
         self.assertTrue(requests_patch.get.called)
         self.assertTrue(requests_patch.get().raise_for_status)
 
@@ -66,7 +67,6 @@ class ChannelTest(TestCase):
 
         self.channel.update_channel_info(save=False)
 
-        Channel.objects.get(pk=self.channel.pk)
         self.assertEqual(self.channel.title, 'testchannel')
         self.assertEqual(self.channel.thumbnail,
                          'http://example.com/image.png')
@@ -185,23 +185,22 @@ class VideoQuerySetTest(TestCase):
             },
         }
 
-    @unittest.skipIf(os.name == 'nt', 'Windows does not support timezones')
     def test__create_or_update__new_video(self):
-        Video.objects.create_or_update(self.channel, self.videodata)
+        video = Video.objects.create_or_update(self.channel, self.videodata)
+
         uploaded = timezone.make_aware(
             datetime.datetime(2014, 1, 1, 12), timezone.get_current_timezone())
 
-        self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
-        video = Video.objects.get(youtubeid='abcdef')
+        video.refresh_from_db()
         self.assertEqual(video.duration, 3 * 60 + 40)
         self.assertEqual(video.uploader, self.channel)
         self.assertEqual(video.category, self.category)
         self.assertEqual(video.view_count, 1000)
         self.assertEqual(video.favorite_count, 20)
-        self.assertEqual(video.uploaded, uploaded)
+        self.assertEqual(video.uploaded.astimezone(pytz.utc),
+                         uploaded.astimezone(pytz.utc))
         self.assertEqual(video.updated, uploaded)
 
-    @unittest.skipIf(os.name == 'nt', 'Windows does not support timezones')
     def test__create_or_update__existing_video(self):
         video = Video.objects.create(
             youtubeid='abcdef',
@@ -210,16 +209,17 @@ class VideoQuerySetTest(TestCase):
             duration=123,
         )
 
-        Video.objects.create_or_update(self.channel, self.videodata)
+        video = Video.objects.create_or_update(self.channel, self.videodata)
+
         uploaded = timezone.make_aware(
             datetime.datetime(2014, 1, 1, 12), timezone.get_current_timezone())
 
-        self.assertTrue(Video.objects.filter(youtubeid='abcdef').exists())
-        video = Video.objects.get(youtubeid='abcdef')
-        self.assertEqual(video.duration, 123)
+        video.refresh_from_db()
+        self.assertEqual(video.duration, 3 * 60 + 40)
         self.assertEqual(video.uploader, self.channel)
         self.assertEqual(video.category, self.category)
         self.assertEqual(video.view_count, 1000)
         self.assertEqual(video.favorite_count, 20)
         self.assertIsNotNone(video.uploaded)
-        self.assertEqual(video.updated, uploaded)
+        self.assertEqual(video.updated.astimezone(pytz.utc),
+                         uploaded.astimezone(pytz.utc))

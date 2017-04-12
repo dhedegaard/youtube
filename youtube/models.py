@@ -42,8 +42,8 @@ class Channel(models.Model):
         # Save details from channel.
         self.title = item['snippet']['title']
         self.thumbnail = item['snippet']['thumbnails']['default']['url']
-        self.uploads_playlist = (item['contentDetails']['relatedPlaylists']
-                                 ['uploads'])
+        self.uploads_playlist = (
+            item['contentDetails']['relatedPlaylists']['uploads'])
 
         if save:
             self.save()
