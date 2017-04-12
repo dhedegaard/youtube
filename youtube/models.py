@@ -174,36 +174,27 @@ class VideoQuerySet(models.QuerySet):
         return self.exclude(deleted=True)
 
     def create_or_update(self, channel, data):
+        '''
+        Creates or updates a `Video` object with the data given, for the
+        channel given.
+        '''
         # Fetch video details, if it exists.
-        youtubeid = data['id']
-        video = Video.objects.filter(youtubeid=youtubeid).first()
         duration = parse_duration(data['contentDetails']['duration'])
 
-        if not video:
-            # Create the video.
-            video = Video.objects.create(
-                youtubeid=youtubeid,
-                uploader=channel,
-                title=data['snippet']['title'],
-                category_id=data['snippet']['categoryId'],
-                description=data['snippet']['description'],
-                duration=duration.total_seconds(),
-                view_count=data.get('statistics', {}).get('viewCount'),
-                favorite_count=data.get('statistics', {}).get('favoriteCount'),
-                uploaded=dateutil.parser.parse(data['snippet']['publishedAt']),
-                updated=dateutil.parser.parse(data['snippet']['publishedAt']),
-            )
-        else:
-            video.title = data['snippet']['title']
-            video.description = data['snippet']['description']
-            video.view_count = data.get('statistics', {}).get('viewCount')
-            video.favorite_count = data.get(
-                'statistics', {}).get('favoriteCount')
-            video.updated = dateutil.parser.parse(
-                data['snippet']['publishedAt'])
-            video.save()
-
-        return video
+        return Video.objects.update_or_create(
+            youtubeid=data['id'],
+            defaults={
+                'uploader': channel,
+                'title': data['snippet']['title'],
+                'category_id': data['snippet']['categoryId'],
+                'description': data['snippet']['description'],
+                'duration': duration.total_seconds(),
+                'view_count': data.get('statistics', {}).get('viewCount'),
+                'favorite_count': data.get('statistics', {}).get('favoriteCount'),
+                'uploaded': dateutil.parser.parse(data['snippet']['publishedAt']),
+                'updated': dateutil.parser.parse(data['snippet']['publishedAt']),
+            },
+        )[0]
 
 
 class Video(models.Model):
