@@ -51,3 +51,19 @@ def fetch_videocategories(categoryids):
         })
     resp.raise_for_status()
     return resp.json()['items']
+
+
+def fetch_channel_info(channelid, parts=('snippet', 'contentDetails')):
+    '''
+    Fetches and returns a dict of info about a given channel, with the given
+    channel id.
+    '''
+    resp = requests.get(
+        'https://www.googleapis.com/youtube/v3/channels', params={
+            'part': ','.join(parts),
+            'id': channelid,
+            'key': settings.YOUTUBE_API_KEY,
+        }
+    )
+    resp.raise_for_status()
+    return resp.json()['items'][0]

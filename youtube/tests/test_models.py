@@ -15,24 +15,22 @@ class ChannelTest(TestCase):
             author='testauthor',
         )
 
-    @mock.patch('youtube.models.requests')
-    def test__update_channel_info(self, requests_patch):
-        requests_patch.get().json.return_value = {
-            'items': [{
-                'snippet': {
-                    'title': 'testchannel',
-                    'thumbnails': {
-                        'default': {
-                            'url': 'http://example.com/image.png',
-                        },
+    @mock.patch('youtube.models.fetch_channel_info')
+    def test__update_channel_info(self, fetch_channel_info_patch):
+        fetch_channel_info_patch.return_value = {
+            'snippet': {
+                'title': 'testchannel',
+                'thumbnails': {
+                    'default': {
+                        'url': 'http://example.com/image.png',
                     },
                 },
-                'contentDetails': {
-                    'relatedPlaylists': {
-                        'uploads': 'uploadschannelid',
-                    },
+            },
+            'contentDetails': {
+                'relatedPlaylists': {
+                    'uploads': 'uploadschannelid',
                 },
-            }],
+            },
         }
 
         self.channel.update_channel_info()
@@ -42,27 +40,24 @@ class ChannelTest(TestCase):
         self.assertEqual(
             self.channel.thumbnail, 'http://example.com/image.png')
         self.assertEqual(self.channel.uploads_playlist, 'uploadschannelid')
-        self.assertTrue(requests_patch.get.called)
-        self.assertTrue(requests_patch.get().raise_for_status)
+        fetch_channel_info_patch.assert_called_with(self.channel.channelid)
 
-    @mock.patch('youtube.models.requests')
-    def test__update_channel_info__no_save(self, requests_patch):
-        requests_patch.get().json.return_value = {
-            'items': [{
-                'snippet': {
-                    'title': 'testchannel',
-                    'thumbnails': {
-                        'default': {
-                            'url': 'http://example.com/image.png',
-                        },
+    @mock.patch('youtube.models.fetch_channel_info')
+    def test__update_channel_info__no_save(self, fetch_channel_info_patch):
+        fetch_channel_info_patch.return_value = {
+            'snippet': {
+                'title': 'testchannel',
+                'thumbnails': {
+                    'default': {
+                        'url': 'http://example.com/image.png',
                     },
                 },
-                'contentDetails': {
-                    'relatedPlaylists': {
-                        'uploads': 'uploadschannelid',
-                    },
+            },
+            'contentDetails': {
+                'relatedPlaylists': {
+                    'uploads': 'uploadschannelid',
                 },
-            }],
+            },
         }
 
         self.channel.update_channel_info(save=False)
@@ -71,8 +66,7 @@ class ChannelTest(TestCase):
         self.assertEqual(self.channel.thumbnail,
                          'http://example.com/image.png')
         self.assertEqual(self.channel.uploads_playlist, 'uploadschannelid')
-        self.assertTrue(requests_patch.get.called)
-        self.assertTrue(requests_patch.get().raise_for_status)
+        fetch_channel_info_patch.assert_called_with(self.channel.channelid)
 
     @mock.patch('youtube.models.requests')
     @mock.patch.object(Category.objects, 'get_categoryids')

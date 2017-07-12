@@ -7,6 +7,7 @@ from django.conf import settings
 from ..youtubeapi import (
     check_channel_id_exists,
     fetch_channel_id_for_author,
+    fetch_channel_info,
     fetch_videocategories,
 )
 
@@ -103,6 +104,34 @@ class FetchVideocategoriesTestCase(TestCase):
             params={
                 'part': 'snippet',
                 'id': '1,2,3',
+                'key': settings.YOUTUBE_API_KEY,
+            })
+        self.assertTrue(resp_mock.raise_for_status.called)
+        self.assertTrue(resp_mock.json.called)
+
+
+class FetchChannelInfoTestCase(TestCase):
+
+    @mock.patch('youtube.youtubeapi.requests')
+    def test(self, requests_patch):
+        resp_mock = mock.Mock()
+        resp_mock.json.return_value = {
+            'items': [
+                {
+                    'id': '1234',
+                },
+            ],
+        }
+        requests_patch.get.return_value = resp_mock
+
+        self.assertEqual(fetch_channel_info('1234'), {
+            'id': '1234',
+        })
+
+        requests_patch.get.assert_called_with(
+            'https://www.googleapis.com/youtube/v3/channels', params={
+                'part': 'snippet,contentDetails',
+                'id': '1234',
                 'key': settings.YOUTUBE_API_KEY,
             })
         self.assertTrue(resp_mock.raise_for_status.called)

@@ -7,7 +7,10 @@ from django.conf import settings
 from django.utils import timezone
 from isodate import parse_duration
 
-from .youtubeapi import fetch_videocategories
+from .youtubeapi import (
+    fetch_channel_info,
+    fetch_videocategories,
+)
 
 class Channel(models.Model):
     channelid = models.TextField(unique=True)
@@ -26,25 +29,14 @@ class Channel(models.Model):
         )
 
     def update_channel_info(self, save=True):
-        # Fetch data from the API.
-        resp = requests.get(
-            'https://www.googleapis.com/youtube/v3/channels', params={
-                'part': 'snippet,contentDetails',
-                'id': self.channelid,
-                'key': settings.YOUTUBE_API_KEY,
-            }
-        )
-        resp.raise_for_status()
-
-        # Read response as JSON and fetch the first item.
-        data = resp.json()
-        item = data['items'][0]
+        # Retrieve the channel info.
+        info = fetch_channel_info(self.channelid)
 
         # Save details from channel.
-        self.title = item['snippet']['title']
-        self.thumbnail = item['snippet']['thumbnails']['default']['url']
+        self.title = info['snippet']['title']
+        self.thumbnail = info['snippet']['thumbnails']['default']['url']
         self.uploads_playlist = (
-            item['contentDetails']['relatedPlaylists']['uploads'])
+            info['contentDetails']['relatedPlaylists']['uploads'])
 
         if save:
             self.save()
