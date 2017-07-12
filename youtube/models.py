@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-import requests
 
 import dateutil.parser
 from django.db import models
@@ -10,6 +9,8 @@ from isodate import parse_duration
 from .youtubeapi import (
     fetch_channel_info,
     fetch_videocategories,
+    fetch_videos_from_playlist,
+    fetch_videos,
 )
 
 class Channel(models.Model):
@@ -55,50 +56,26 @@ class Channel(models.Model):
         content_exists = True
 
         while content_exists:
-            # Fetch playlist-data from the API.
-            resp = requests.get(
-                'https://www.googleapis.com/youtube/v3/playlistItems', params={
-                    'part': 'contentDetails',
-                    'maxResults': 50,
-                    'playlistId': self.uploads_playlist,
-                    'key': settings.YOUTUBE_API_KEY,
-                    'pageToken': next_page_token
-                }
-            )
-            resp.raise_for_status()
-
             # Read response as JSON and fetch all videoids.
-            data = resp.json()
+            items, next_page_token = fetch_videos_from_playlist(
+                self.uploads_playlist, next_page_token=next_page_token)
             videoids = set(
-                [item['contentDetails']['videoId'] for item in data['items']]
-            )
+                [item['contentDetails']['videoId'] for item in items])
 
-            # Fetch the next page token, if it exists.
-            if full_fetch:
-                next_page_token = data.get('nextPageToken')
-                content_exists = bool(next_page_token)
-            else:
+            # Fetch the next page token, if it exists and the callers wants it.
+            if not full_fetch or not next_page_token:
                 content_exists = False
 
-            # Fetch data for the videoids from previous playlist call(s), since
-            # playlist doesn't return all the data we need.
-            resp = requests.get(
-                'https://www.googleapis.com/youtube/v3/videos', params={
-                    'part': 'snippet,contentDetails,statistics',
-                    'id': ','.join(videoids),
-                    'key': settings.YOUTUBE_API_KEY,
-                }
-            )
-            resp.raise_for_status()
-            data = resp.json()
+            # Not fetch videodata based on 
+            items = fetch_videos(videoids)
 
             # Create all categories used, and not already in the backend.
             Category.objects.get_categoryids([
-                e['snippet']['categoryId'] for e in data['items']])
+                e['snippet']['categoryId'] for e in items])
 
             # Read response as JSON and iterate on items updating/creating
             # Video objects as we go along.
-            for item in data['items']:
+            for item in items:
                 fetched += 1
                 Video.objects.create_or_update(self, item)
 

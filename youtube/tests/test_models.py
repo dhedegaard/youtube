@@ -68,54 +68,73 @@ class ChannelTest(TestCase):
         self.assertEqual(self.channel.uploads_playlist, 'uploadschannelid')
         fetch_channel_info_patch.assert_called_with(self.channel.channelid)
 
-    @mock.patch('youtube.models.requests')
+    @mock.patch('youtube.models.fetch_videos')
+    @mock.patch('youtube.models.fetch_videos_from_playlist')
     @mock.patch.object(Category.objects, 'get_categoryids')
     @mock.patch.object(Video.objects, 'create_or_update')
-    def test__fetch_videos(self, create_or_update_patch,
-                           get_categoryids_patch, requests_patch):
-        requests_patch.get().json.return_value = {
-            'items': [{
-                'snippet': {
-                    'categoryId': 1,
-                },
-                'contentDetails': {
-                    'videoId': 'abcdef',
-                },
-            }],
-        }
+    def test__fetch_videos(
+            self, create_or_update_patch,
+            get_categoryids_patch,
+            fetch_videos_from_playlist_patch,
+            fetch_videos_patch):
+        fetch_videos_from_playlist_patch.return_value = [{
+            'snippet': {
+                'categoryId': 1,
+            },
+            'contentDetails': {
+                'videoId': 'abcdef',
+            },
+        }], None
+        fetch_videos_patch.return_value = [{
+            'snippet': {
+                'categoryId': 1,
+            },
+            'contentDetails': {
+                'videoId': 'abcdef',
+            },
+        }]
 
         self.channel.fetch_videos()
 
         self.assertTrue(get_categoryids_patch.called)
         self.assertTrue(create_or_update_patch.called)
-        self.assertTrue(requests_patch.get.called)
-        self.assertTrue(requests_patch.get().raise_for_status.called)
-        self.assertTrue(requests_patch.get().json.called)
+        fetch_videos_from_playlist_patch.assert_called_with(
+            self.channel.channelid, next_page_token=None)
+        fetch_videos_patch.assert_called_with({'abcdef'})
 
-    @mock.patch('youtube.models.requests')
+    @mock.patch('youtube.models.fetch_videos')
+    @mock.patch('youtube.models.fetch_videos_from_playlist')
     @mock.patch.object(Category.objects, 'get_categoryids')
     @mock.patch.object(Video.objects, 'create_or_update')
     def test__fetch_videos__full_fetch(
-            self, create_or_update_patch, get_categoryids_patch,
-            requests_patch):
-        requests_patch.get().json.return_value = {
-            'items': [{
-                'snippet': {
-                    'categoryId': 1,
-                },
-                'contentDetails': {
-                    'videoId': 'abcdef',
-                },
-            }],
-        }
+            self, create_or_update_patch,
+            get_categoryids_patch,
+            fetch_videos_from_playlist_patch,
+            fetch_videos_patch):
+        fetch_videos_from_playlist_patch.return_value = [{
+            'snippet': {
+                'categoryId': 1,
+            },
+            'contentDetails': {
+                'videoId': 'abcdef',
+            },
+        }], None
+        fetch_videos_patch.return_value = [{
+            'snippet': {
+                'categoryId': 1,
+            },
+            'contentDetails': {
+                'videoId': 'abcdef',
+            },
+        }]
 
         self.channel.fetch_videos(full_fetch=True)
 
         self.assertTrue(get_categoryids_patch.called)
         self.assertTrue(create_or_update_patch.called)
-        self.assertTrue(requests_patch.get.called)
-        self.assertTrue(requests_patch.get().raise_for_status.called)
-        self.assertTrue(requests_patch.get().json.called)
+        fetch_videos_from_playlist_patch.assert_called_with(
+            self.channel.channelid, next_page_token=None)
+        fetch_videos_patch.assert_called_with({'abcdef'})
 
 
 class CategoryQuerySetTest(TestCase):
