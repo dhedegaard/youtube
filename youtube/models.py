@@ -7,6 +7,7 @@ from django.conf import settings
 from django.utils import timezone
 from isodate import parse_duration
 
+from .youtubeapi import fetch_videocategories
 
 class Channel(models.Model):
     channelid = models.TextField(unique=True)
@@ -139,19 +140,11 @@ class CategoryQuerySet(models.QuerySet):
 
         # Fetch missing categories and create them in the backend.
         if missing_categoryids:
-            resp = requests.get(
-                'https://www.googleapis.com/youtube/v3/videoCategories',
-                params={
-                    'part': 'snippet',
-                    'id': ','.join([str(e) for e in missing_categoryids]),
-                    'key': settings.YOUTUBE_API_KEY,
-                })
-            resp.raise_for_status()
 
             # Iterate and create new categories, adding them to the existing
             # list of categories.
             categories = list(categories)
-            for item in resp.json()['items']:
+            for item in fetch_videocategories(missing_categoryids):
                 categories.append(self.get_or_create(
                     id=item['id'],
                     defaults={

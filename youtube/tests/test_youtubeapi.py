@@ -2,16 +2,17 @@ from __future__ import unicode_literals
 
 import mock
 from django.test import TestCase
+from django.conf import settings
 
-from ..utils import (
-    calculate_rating,
+from ..youtubeapi import (
     check_channel_id_exists,
     fetch_channel_id_for_author,
+    fetch_videocategories,
 )
 
 
 class FetchChannelIdForAuthorTest(TestCase):
-    @mock.patch('youtube.utils.requests')
+    @mock.patch('youtube.youtubeapi.requests')
     def test__channel_exists(self, requests_patch):
         requests_patch.get().json.return_value = {
             'pageInfo': {
@@ -31,7 +32,7 @@ class FetchChannelIdForAuthorTest(TestCase):
         self.assertTrue(requests_patch.get().raise_for_status.called)
         self.assertTrue(requests_patch.get().json.called)
 
-    @mock.patch('youtube.utils.requests')
+    @mock.patch('youtube.youtubeapi.requests')
     def test__channel_does_not_exist(self, requests_patch):
         requests_patch.get().raise_for_status.side_effect = Exception(
             'failed request')
@@ -44,7 +45,7 @@ class FetchChannelIdForAuthorTest(TestCase):
 
 
 class CheckChannelIdExists(TestCase):
-    @mock.patch('youtube.utils.requests')
+    @mock.patch('youtube.youtubeapi.requests')
     def test__exists(self, requests_patch):
         resp_mock = mock.MagicMock()
         resp_mock.json.return_value = {
@@ -60,7 +61,7 @@ class CheckChannelIdExists(TestCase):
         self.assertTrue(resp_mock.raise_for_status.called)
         self.assertTrue(resp_mock.json.called)
 
-    @mock.patch('youtube.utils.requests')
+    @mock.patch('youtube.youtubeapi.requests')
     def test__does_not_exist(self, requests_patch):
         resp_mock = mock.MagicMock()
         resp_mock.json.return_value = {
@@ -77,9 +78,32 @@ class CheckChannelIdExists(TestCase):
         self.assertTrue(resp_mock.json.called)
 
 
-class CalculateRatingTest(TestCase):
-    def test__success(self):
-        self.assertEqual(calculate_rating(200, 300), 2.0)
+class FetchVideocategoriesTestCase(TestCase):
 
-    def test__div_by_zero(self):
-        self.assertIsNone(calculate_rating(0, 0))
+    @mock.patch('youtube.youtubeapi.requests')
+    def test(self, requests_patch):
+        resp_mock = mock.Mock()
+        resp_mock.json.return_value = {
+            'items': [
+                {
+                    'name': 'item1',
+                },
+            ],
+        }
+        requests_patch.get.return_value = resp_mock
+
+        self.assertEqual(fetch_videocategories([1, 2, 3]), [
+            {
+                'name': 'item1',
+            },
+        ])
+
+        requests_patch.get.assert_called_with(
+            'https://www.googleapis.com/youtube/v3/videoCategories',
+            params={
+                'part': 'snippet',
+                'id': '1,2,3',
+                'key': settings.YOUTUBE_API_KEY,
+            })
+        self.assertTrue(resp_mock.raise_for_status.called)
+        self.assertTrue(resp_mock.json.called)

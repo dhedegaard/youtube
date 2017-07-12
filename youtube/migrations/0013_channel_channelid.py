@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-from youtube.utils import fetch_channel_id_for_author
+from youtube.youtubeapi import fetch_channel_id_for_author
 
 
 def fetch_channel_ids(apps, schema_editor):

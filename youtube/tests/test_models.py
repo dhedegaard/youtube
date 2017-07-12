@@ -139,24 +139,23 @@ class CategoryQuerySetTest(TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0], category)
 
-    @mock.patch('youtube.models.requests')
-    def test__new_category(self, requests_patch):
-        requests_patch.get().json.return_value = {
-            'items': [
-                {
-                    'id': 1,
-                    'snippet': {
-                        'title': 'testcategory',
-                    },
+    @mock.patch('youtube.models.fetch_videocategories')
+    def test__new_category(self, fetch_videocategories_patch):
+        fetch_videocategories_patch.return_value = [
+            {
+                'id': 1,
+                'snippet': {
+                    'title': 'testcategory',
                 },
-            ],
-        }
+            },
+        ]
         result = Category.objects.get_categoryids([1])
 
         self.assertEqual(Category.objects.all().count(), 1)
         self.assertTrue(Category.objects.filter(pk=1).exists())
         self.assertEqual(result[0].pk, 1)
         self.assertEqual(result[0].category, 'testcategory')
+        fetch_videocategories_patch.assert_called_with([1])
 
 
 class VideoQuerySetTest(TestCase):

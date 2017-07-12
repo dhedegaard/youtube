@@ -4,7 +4,7 @@ import re
 from django import forms
 from django.utils.html import format_html
 
-from .utils import fetch_channel_id_for_author, check_channel_id_exists
+from .youtubeapi import fetch_channel_id_for_author, check_channel_id_exists
 from .models import Channel
 
 
