@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 
 import dateutil.parser
 from django.db import models
-from django.conf import settings
 from django.utils import timezone
 from isodate import parse_duration
 
@@ -12,6 +11,7 @@ from .youtubeapi import (
     fetch_videos_from_playlist,
     fetch_videos,
 )
+
 
 class Channel(models.Model):
     channelid = models.TextField(unique=True)
@@ -66,7 +66,7 @@ class Channel(models.Model):
             if not full_fetch or not next_page_token:
                 content_exists = False
 
-            # Not fetch videodata based on 
+            # Not fetch videodata based on the video ids.
             items = fetch_videos(videoids)
 
             # Create all categories used, and not already in the backend.

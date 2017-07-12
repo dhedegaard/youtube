@@ -20,6 +20,7 @@ def fetch_channel_id_for_author(author):
     if data['pageInfo']['totalResults'] > 0:
         return data['items'][0]['id']
 
+
 def check_channel_id_exists(channelid):
     '''
     Checks to see if a given channelid string is a valid youtube channel id.
