@@ -168,7 +168,7 @@ class CategoryQuerySetTest(TestCase):
         self.assertTrue(Category.objects.filter(pk=1).exists())
         self.assertEqual(result[0].pk, 1)
         self.assertEqual(result[0].category, 'testcategory')
-        fetch_videocategories_patch.assert_called_with([1])
+        fetch_videocategories_patch.assert_called_with({1})
 
 
 class VideoQuerySetTest(TestCase):

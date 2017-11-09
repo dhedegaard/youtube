@@ -104,8 +104,8 @@ class CategoryQuerySet(models.QuerySet):
         existing_categoryids = categories.values_list('pk', flat=True)
 
         # Figure out what we're missing (if we're missing anything).
-        missing_categoryids = [e for e in categoryids
-                               if e not in existing_categoryids]
+        missing_categoryids = set([
+            e for e in categoryids if e not in existing_categoryids])
 
         # Fetch missing categories and create them in the backend.
         if missing_categoryids:
