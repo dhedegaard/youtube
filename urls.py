@@ -22,10 +22,8 @@ urlpatterns = [
     url(r'^admin/add/$', views.channel_add, name='channel-add'),
     url(r'^login/$', auth_views.login, {
         'template_name': 'youtube/login.html',
-        'current_app': 'youtube',
     }, name='login'),
     url(r'^logout/$', auth_views.logout, {
         'next_page': '/',
-        'current_app': 'youtube',
     }, name='logout'),
 ]

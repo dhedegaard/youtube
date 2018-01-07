@@ -56,9 +56,11 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('category', models.ForeignKey(
-                    related_name='videos', to='youtube.Category')),
+                    related_name='videos', to='youtube.Category',
+                    on_delete=models.CASCADE)),
                 ('uploader', models.ForeignKey(
-                    related_name='videos', to='youtube.Channel')),
+                    related_name='videos', to='youtube.Channel',
+                    on_delete=models.CASCADE)),
             ],
             options={
                 'ordering': ['-uploaded'],

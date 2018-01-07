@@ -26,7 +26,7 @@ def channel(request, author):
     qs = Channel.objects.prefetch_related('videos')
 
     # If we're not logged in, don't allow showing hidden channels.
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         qs = qs.filter(hidden=False)
 
     # Fetch the channel, or 404.
