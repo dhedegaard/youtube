@@ -27,7 +27,10 @@ class AddChannelForm(forms.Form):
 
         # Check to see if the channel already exists.
         if channelid:
-            existing_channel = Channel.objects.filter(channelid=channelid).first()
+            existing_channel = (
+                Channel.objects
+                .filter(channelid=channelid)
+                .first())
         else:
             existing_channel = Channel.objects.filter(author=channel).first()
 
