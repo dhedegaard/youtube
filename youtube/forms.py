@@ -22,16 +22,21 @@ class AddChannelForm(forms.Form):
         if rc:
             channel = rc[0]
 
+        # Check to see if the channel is an author.
+        channelid = fetch_channel_id_for_author(channel)
+
         # Check to see if the channel already exists.
-        existing_channel = Channel.objects.filter(author=channel).first()
+        if channelid:
+            existing_channel = Channel.objects.filter(channelid=channelid).first()
+        else:
+            existing_channel = Channel.objects.filter(author=channel).first()
+
         if existing_channel:
             raise forms.ValidationError(format_html(
                 'Channel already exists in the system under the title: '
                 '<b>{0}</b>',
                 existing_channel.title))
 
-        # Check to see if the channel is an author.
-        channelid = fetch_channel_id_for_author(channel)
         # Check to see if the channel already is a channel id.
         if not channelid and check_channel_id_exists(channel):
             channelid = channel

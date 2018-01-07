@@ -46,7 +46,10 @@ class AddChannelFormTest(TestCase):
         self.assertEqual(form.cleaned_data['channel'], 'testuser')
         self.assertTrue(fetch_channel_id_for_author_patch.called)
 
-    def test__fetch_existing_channel(self):
+    @mock.patch('youtube.forms.fetch_channel_id_for_author')
+    def test__fetch_existing_channel(
+            self, fetch_channel_id_for_author_patch):
+        fetch_channel_id_for_author_patch.return_value = None
         Channel.objects.create(
             author='testchannel',
             title='Test Channel',
@@ -61,6 +64,29 @@ class AddChannelFormTest(TestCase):
         self.assertEqual(form.errors['channel'][0],
                          'Channel already exists in the system '
                          'under the title: <b>Test Channel</b>')
+        fetch_channel_id_for_author_patch.assert_called_with('testchannel')
+
+    @mock.patch('youtube.forms.fetch_channel_id_for_author')
+    def test__fetch_existing_channel__based_on_channelid(
+            self, fetch_channel_id_for_author_patch):
+        fetch_channel_id_for_author_patch.return_value = 1234
+        Channel.objects.create(
+            author='testchannel',
+            title='Test Channel',
+            channelid=1234,
+        )
+
+        form = AddChannelForm({
+            'channel': 'sametestchannel',
+        })
+
+        self.assertFalse(form.is_valid())
+        self.assertTrue('channel' in form.errors)
+        self.assertEqual(form.errors['channel'][0],
+                         'Channel already exists in the system '
+                         'under the title: <b>Test Channel</b>')
+        fetch_channel_id_for_author_patch.assert_called_with(
+            'sametestchannel')
 
     @mock.patch('youtube.forms.fetch_channel_id_for_author')
     @mock.patch('youtube.forms.check_channel_id_exists')
