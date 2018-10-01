@@ -1,4 +1,4 @@
-Django==2.1.1
+Django==2.1.2
 python-dateutil==2.7.3
 requests==2.19.1
 django-el-pagination==3.2.4
