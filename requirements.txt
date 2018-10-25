@@ -1,5 +1,5 @@
 Django==2.1.2
-python-dateutil==2.7.3
+python-dateutil==2.7.4
 requests==2.20.0
 django-el-pagination==3.2.4
 isodate==0.6.0
