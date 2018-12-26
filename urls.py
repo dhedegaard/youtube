@@ -20,10 +20,10 @@ urlpatterns = [
     url(r'^admin/(?P<channelid>\d+)/fetch/$',
         views.channel_fetch, name='channel-fetch'),
     url(r'^admin/add/$', views.channel_add, name='channel-add'),
-    url(r'^login/$', auth_views.login, {
+    url(r'^login/$', auth_views.LoginView, {
         'template_name': 'youtube/login.html',
     }, name='login'),
-    url(r'^logout/$', auth_views.logout, {
+    url(r'^logout/$', auth_views.LogoutView, {
         'next_page': '/',
     }, name='logout'),
 ]
