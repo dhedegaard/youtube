@@ -2,6 +2,7 @@
 {% load humanize %}
 
 {% block content %}
+{% spaceless %}
 
 <div class="row">
     <div class="col-md-6">
@@ -9,24 +10,20 @@
     </div>
     <div class="col-md-6 text-right">
 
-        <form method="POST" action="{% url 'channel-add' %}"
-              class="form form-inline add-channel-form inline">
+        <form method="POST" action="{% url 'channel-add' %}" class="form form-inline add-channel-form inline">
             {% csrf_token %}
             <div class="input-group">
-                <input type="text" class="form-control input-sm" name="{{ form.channel.html_name }}"
-                       id="form.channel.auto_id }}" value="{{ form.channel.value|default:'' }}"
-                       {% if request.method == 'POST' %}autofocus{% endif %}
-                       placeholder="URL to author name" />
+                <input type="text" class="form-control input-sm" name="{{ form.channel.html_name }}" id="form.channel.auto_id }}" value="{{ form.channel.value|default:'' }}" {% if request.method == 'POST' %}autofocus{% endif %} placeholder="URL to author name" />
                 <span class="input-group-btn">
                     <button type="submit" class="btn btn-primary btn-sm">
                         <i class="glyphicon glyphicon-plus"></i>
-                        Add channel
+                        <span> Add channel</span>
                     </button>
                 </span>
             </div>
             {% if form.channel.errors %}
             <div class="help-block">
-                {{ form.channel.errors.0 }}
+                <span>{{ form.channel.errors.0 }}</span>
             </div>
             {% endif %}
         </form>
@@ -54,64 +51,50 @@
             {% endif %}
         </td>
         <td>
-            <a href="{% url 'channel' author=channel.author %}"
-               title="Show videos for the channel">
-                {{ channel.title }}
+            <a href="{% url 'channel' author=channel.author %}" title="Show videos for the channel">
+                <span>{{ channel.title }}</span>
             </a>
             <a href="{{ channel.url }}" title="Go to youtube channel">
                 <i class="glyphicon glyphicon-link"></i>
             </a>
         </td>
+        <td class="text-right">{{ channel.videocount|default:0|intcomma }}</td>
+        <td>{{ channel.created|date }}</td>
+        <td>{{ channel.updated|naturaltime }}</td>
         <td class="text-right">
-            {{ channel.videocount|default:0|intcomma }}
-        </td>
-        <td>
-            {{ channel.created|date }}
-        </td>
-        <td>
-            {{ channel.updated|naturaltime }}
-        </td>
-        <td class="text-right">
-            <form class="form form-inline inline" method="POST"
-                action="{% url 'toggle-hidden' channelid=channel.pk %}">
+            <form class="form form-inline inline" method="POST" action="{% url 'toggle-hidden' channelid=channel.pk %}">
                 {% csrf_token %}
                 {% if channel.hidden %}
-                <button class="btn btn-xs btn-success"
-                        title="Show channel">
+                <button class="btn btn-xs btn-success" title="Show channel">
                     <i class="glyphicon glyphicon-eye-open"></i>
-                    Show
+                    <span> Show</span>
                 </button>
                 {% else %}
-                <button class="btn btn-xs btn-warning"
-                        title="Hide channel">
+                <button class="btn btn-xs btn-warning" title="Hide channel">
                     <i class="glyphicon glyphicon-eye-close"></i>
-                    Hide
+                    <span> Hide</span>
                 </button>
                 {% endif %}
             </form>
-            <form class="form form-inline inline" method="POST"
-                action="{% url 'channel-fetch' channelid=channel.pk %}">
+            <form class="form form-inline inline" method="POST" action="{% url 'channel-fetch' channelid=channel.pk %}">
                 {% csrf_token %}
                 <button class="btn btn-xs btn-primary" title="Does a fast fetch of the latest videos on the channel">
                     <i class="glyphicon glyphicon-refresh"></i>
-                    Fast fetch
+                    <span> Fast fetch</span>
                 </button>
             </form>
-            <form class="form form-inline inline" method="POST"
-                action="{% url 'channel-full-fetch' channelid=channel.pk %}">
+            <form class="form form-inline inline" method="POST" action="{% url 'channel-full-fetch' channelid=channel.pk %}">
                 {% csrf_token %}
-                <button class="btn btn-xs btn-info" title="Does a full fetch of all videos on the channel"
-                        onclick="return confirm('Are you sure you want to do a full fetch ? It might take a long time.');">
+                <button class="btn btn-xs btn-info" title="Does a full fetch of all videos on the channel" onclick="return confirm('Are you sure you want to do a full fetch ? It might take a long time.');">
                     <i class="glyphicon glyphicon-retweet"></i>
-                    Full update
+                    <span> Full update</span>
                 </button>
             </form>
-            <form class="form form-inline inline" method="POST"
-                action="{% url 'channel-delete' channelid=channel.pk %}">
+            <form class="form form-inline inline" method="POST" action="{% url 'channel-delete' channelid=channel.pk %}">
                 {% csrf_token %}
                 <button class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to remove the channel ?')">
                     <i class="glyphicon glyphicon-trash"></i>
-                    Remove
+                    <span> Remove</span>
                 </button>
             </form>
         </td>
@@ -119,8 +102,8 @@
     {% endfor %}
 </table>
 {% else %}
-<div class="alert alert-warning">
-    There are no channels in the system.
-</div>
+<div class="alert alert-warning">There are no channels in the system.</div>
 {% endif %}
+
+{% endspaceless %}
 {% endblock %}
