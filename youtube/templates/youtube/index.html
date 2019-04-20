@@ -38,7 +38,7 @@
         <div class="uploader nowrap text-left">
             <a href="{% url 'channel' author=video.uploader.author %}" title="{{ video.uploader.title|default:video.uploader.author }}">
                 <img src="{{ video.uploader.thumbnail }}" />
-                <small>{{ video.uploader.title|default:video.uploader.author }}</small>
+                <small> {{ video.uploader.title|default:video.uploader.author }}</small>
             </a>
         </div>
     </div>
