@@ -1,50 +1,65 @@
 {% extends 'youtube/base.html' %}
 {% block content %}
+{% spaceless %}
 <div class="row">
-    <div class="col-sm-4 col-sm-offset-4">
-        <h3>Login</h3>
-    </div>
+  <div class="col-sm-4 col-sm-offset-4">
+    <h3>Login</h3>
+  </div>
 </div>
 <form method="POST" action="" class="form form-horizontal">
-    {% for error in form.non_field_errors %}
-    <div class="alert alert-danger col-sm-offset-3 col-sm-6">
-        {{ error }}
+  {% for error in form.non_field_errors %}
+  <div class="alert alert-danger col-sm-offset-3 col-sm-6">
+    {{ error }}
+  </div>
+  {% endfor %} {% csrf_token %}
+  <div class="form-group{% if form.username.errors %} has-error{% endif %}">
+    <label for="{{ form.username.auto_id }}" class="col-sm-4 control-label">
+      {{ form.username.label }}:
+    </label>
+    <div class="col-sm-4">
+      <input
+        autofocus
+        type="text"
+        class="form-control"
+        id="{{ form.username.auto_id }}"
+        name="{{ form.username.html_name }}"
+        value="{{ form.username.value|default:'' }}"
+      />
     </div>
-    {% endfor %}
-    {% csrf_token %}
-    <div class="form-group{% if form.username.errors %} has-error{% endif %}">
-        <label for="{{form.username.auto_id }}" class="col-sm-4 control-label">
-            {{ form.username.label }}:
-        </label>
-        <div class="col-sm-4">
-            <input autofocus type="text" class="form-control" id="{{form.username.auto_id }}" name="{{ form.username.html_name }}" value="{{ form.username.value|default:'' }}" />
-        </div>
-        {% if form.username.errors %}
-        <div class="col-sm-offset-4 col-sm-4 help-block">
-            {{ form.username.errors.0 }}
-        </div>
-        {% endif %}
+    {% if form.username.errors %}
+    <div class="col-sm-offset-4 col-sm-4 help-block">
+      {{ form.username.errors.0 }}
     </div>
-    <div class="form-group{% if form.password.errors %} has-error{% endif %}">
-        <label for="{{form.password.auto_id }}" class="col-sm-4 control-label">
-            {{ form.password.label }}:
-        </label>
-        <div class="col-sm-4">
-            <input autofocus type="password" class="form-control" id="{{form.username.auto_id }}" name="{{ form.password.html_name }}" value="{{ form.password.value|default:'' }}" />
-        </div>
-        {% if form.password.errors %}
-        <div class="col-sm-offset-4 col-sm-4 help-block">
-            {{ form.password.errors.0 }}
-        </div>
-        {% endif %}
+    {% endif %}
+  </div>
+  <div class="form-group{% if form.password.errors %} has-error{% endif %}">
+    <label for="{{ form.password.auto_id }}" class="col-sm-4 control-label">
+      {{ form.password.label }}:
+    </label>
+    <div class="col-sm-4">
+      <input
+        autofocus
+        type="password"
+        class="form-control"
+        id="{{ form.username.auto_id }}"
+        name="{{ form.password.html_name }}"
+        value="{{ form.password.value|default:'' }}"
+      />
     </div>
-    <div class="form-group">
-        <div class="col-sm-7 col-sm-offset-4">
-            <button type="submit" class="btn btn-primary">
-                <i class="glyphicon glyphicon-lock"></i>
-                Login
-            </button>
-        </div>
+    {% if form.password.errors %}
+    <div class="col-sm-offset-4 col-sm-4 help-block">
+      {{ form.password.errors.0 }}
     </div>
+    {% endif %}
+  </div>
+  <div class="form-group">
+    <div class="col-sm-7 col-sm-offset-4">
+      <button type="submit" class="btn btn-primary">
+        <i class="glyphicon glyphicon-lock"></i>
+        <span> Login</span>
+      </button>
+    </div>
+  </div>
 </form>
+{% endspaceless %}
 {% endblock %}
