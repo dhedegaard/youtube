@@ -17,6 +17,7 @@ matrix:
 
 env:
   - DJANGO_VERSION=2.0.1
+  - DJANGO_VERSION=2.2
   - DJANGO_VERSION=LATEST
 
 install:
