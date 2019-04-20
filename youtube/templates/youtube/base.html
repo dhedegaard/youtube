@@ -1,3 +1,4 @@
+{% spaceless %}
 <!DOCTYPE html>
 {% load static %}
 {% load youtubetags %}
@@ -27,15 +28,14 @@
         <nav class="navbar navbar-inverse navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed"
-                            data-toggle="collapse" data-target="#collapse-navbar">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#collapse-navbar">
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
                     <a class="navbar-brand text-nowrap" href="{% url 'index' %}">
                         <img src="{% static 'youtube/favicon.png' %}" height="22" />
-                        Youtube
+                        <span> Youtube</span>
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="collapse-navbar">
@@ -45,14 +45,14 @@
                             <li{% if page == 'admin' %} class="active"{% endif %}>
                                 <a href="{% url 'admin' %}">
                                     <i class="glyphicon glyphicon-cog"></i>
-                                    admin
+                                    <span> admin</span>
                                 </a>
                             </li>
                             {% else %}
                             <li{% if page == 'admin' %} class="active"{% endif %}>
                                 <a href="{% url 'admin' %}">
                                     <i class="glyphicon glyphicon-lock"></i>
-                                    login
+                                    <span> login</span>
                                 </a>
                             </li>
                             {% endif %}
@@ -62,21 +62,18 @@
                         {% visible_channels as channels %}
                         {% if channels %}
                         <li class="dropdown{% if page == 'channel' %} active{% endif %}">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"
-                               role="button" aria-expanded="false">
-                               <i class="glyphicon glyphicon-user"></i>
-                               Channels
-                               <span class="caret"></span>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                <i class="glyphicon glyphicon-user"></i>
+                                <span> Channels</span>
+                                <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu" role="menu">
                                 {% for channel in channels %}
                                 <li>
                                     <a href="{% url 'channel' author=channel.author %}">
                                         {% if channel.thumbnail %}
-                                        <img src="{{ channel.thumbnail }}"
-                                             class="channel-thumbnail" />
-                                        {% endif %}
-                                        {{ channel.title }}
+                                        <img src="{{ channel.thumbnail }}" class="channel-thumbnail" />{% endif %}
+                                        <span> {{ channel.title }}</span>
                                     </a>
                                 </li>
                                 {% endfor %}
@@ -87,12 +84,9 @@
                                         <li>
                                             <a href="{% url 'channel' author=channel.author %}">
                                                 {% if channel.thumbnail %}
-                                                <img src="{{ channel.thumbnail }}"
-                                                     class="channel-thumbnail" />
-                                                     {% endif %}
-                                                <span class="text-muted">
-                                                    {{ channel.title }}
-                                                </span>
+                                                <img src="{{ channel.thumbnail }}" class="channel-thumbnail" />
+                                                {% endif %}
+                                                <span class="text-muted"> {{ channel.title }}</span>
                                             </a>
                                         </li>
                                     {% endfor %}
@@ -118,3 +112,4 @@
         {% block footer %}{% endblock %}
     </body>
 </html>
+{% endspaceless %}
