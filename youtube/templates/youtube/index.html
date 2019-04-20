@@ -61,13 +61,13 @@ Views: {{ video.view_count|default_if_none:'?'|intcomma }}">
         <div class="col-sm-12 text-center">
             <nav>
                 <ul class="pagination">
+                    {% spaceless %}
                     {% for page in pages %}
                     <li{% if page.is_current %} class="active"{% endif %}>
-                        <a href="{% if page.number == 1 %}?page=1{% else %}{{ page.url }}{% endif %}">
-                            {{ page.label }}
-                        </a>
+                        <a href="{% if page.number == 1 %}?page=1{% else %}{{ page.url }}{% endif %}">{{ page.label }}</a>
                     </li>
                     {% endfor %}
+                    {% endspaceless %}
                 </ul>
             </nav>
         </div>
