@@ -57,7 +57,7 @@
     <div class="col-sm-12 text-center">
       <nav>
         <ul class="pagination">
-          {% with low_bounds=3 high_bounds=pages|length|add:'-1'%}
+          {% with low_bounds=4 high_bounds=pages|length|add:'-3'%}
             {% with low_bounds_border=low_bounds|add:'1' high_bounds_border=high_bounds|add:'-1' %}
               {% for page in pages %}
                 {% if page_number|add:'-4' < page.number and page_number|add:'4' > page.number or page.number <= low_bounds or page.number >= high_bounds %}
