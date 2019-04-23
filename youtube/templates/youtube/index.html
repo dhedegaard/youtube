@@ -10,61 +10,72 @@
 
 {% if channel %}
 <h3>
-    Showing videos from
-    <a href="{{ channel.url }}">
-        <img src="{{ channel.thumbnail }}" class="thumbnail-header" />
-        <b>{{ channel.title }}</b>
-    </a>
-    with a total of <b>{{ videos.count|intcomma }}</b> videos
+  Showing videos from
+  <a href="{{ channel.url }}">
+    <img src="{{ channel.thumbnail }}" class="thumbnail-header" />
+    <b>{{ channel.title }}</b>
+  </a>
+  with a total of <b>{{ videos.count|intcomma }}</b> videos
 </h3>
 {% endif %}
 
 {% paginate 72 videos %}
 {% for video in videos %}
-    {% if forloop.index|divisibleby:'6' or forloop.first %}<div class="row">{% endif %}
-    <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 text-center item">
-        <a href="{{ video.url }}" target="_blank">
-            <div class="thumbnail">
-                <span class="duration">{{ video.duration|pretty_duration }}</span>
-                <img class="thumbnail" src="{{ video.get_thumbnail }}" title="{{ video.title }}" onerror='this.src = "{% static 'youtube/missing.png' %}"' />
-            </div>
-        </a>
-        <div class="title nowrap text-left" title="{{ video.title }}">
-            <small>{{ video.title }}</small>
-        </div>
-        <div class="text-right pull-right text-muted text-nowrap">
-            <small class="uploaded" title="Uploaded: {{ video.uploaded|date:'Y-m-d H:i' }}&#013;Views: {{ video.view_count|default_if_none:'?'|intcomma }}">{{ video.uploaded|timesince_short|default:"" }}</small>
-        </div>
-        <div class="uploader nowrap text-left">
-            <a href="{% url 'channel' author=video.uploader.author %}" title="{{ video.uploader.title|default:video.uploader.author }}">
-                <img src="{{ video.uploader.thumbnail }}" />
-                <small> {{ video.uploader.title|default:video.uploader.author }}</small>
-            </a>
-        </div>
+  {% if forloop.index|divisibleby:'6' or forloop.first %}<div class="row">{% endif %}
+  <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2 text-center item">
+    <a href="{{ video.url }}" target="_blank">
+      <div class="thumbnail">
+        <span class="duration">{{ video.duration|pretty_duration }}</span>
+        <img class="thumbnail" src="{{ video.get_thumbnail }}" title="{{ video.title }}" onerror='this.src = "{% static 'youtube/missing.png' %}"' />
+      </div>
+    </a>
+    <div class="title nowrap text-left" title="{{ video.title }}">
+      <small>{{ video.title }}</small>
     </div>
-    {% if forloop.index|divisibleby:'6' and not forloop.first or forloop.last %}</div>{% endif %}
+    <div class="text-right pull-right text-muted text-nowrap">
+      <small class="uploaded" title="Uploaded: {{ video.uploaded|date:'Y-m-d H:i' }}&#013;Views: {{ video.view_count|default_if_none:'?'|intcomma }}">{{ video.uploaded|timesince_short|default:"" }}</small>
+    </div>
+    <div class="uploader nowrap text-left">
+      <a href="{% url 'channel' author=video.uploader.author %}" title="{{ video.uploader.title|default:video.uploader.author }}">
+        <img src="{{ video.uploader.thumbnail }}" />
+        <small> {{ video.uploader.title|default:video.uploader.author }}</small>
+      </a>
+    </div>
+  </div>
+  {% if forloop.index|divisibleby:'6' and not forloop.first or forloop.last %}</div>{% endif %}
 {% empty %}
 <div class="alert alert-info">
-    There are no videos to display.
+  There are no videos to display.
 </div>
 {% endfor %}
 
 {% get_pages %}
 {% if pages.paginated %}
+{% show_current_number as page_number %}
 <div class="container">
-    <div class="row">
-        <div class="col-sm-12 text-center">
-            <nav>
-                <ul class="pagination">
-                    {% for page in pages %}
-                    <li{% if page.is_current %} class="active"{% endif %}>
-                        <a href="{% if page.number == 1 %}?page=1{% else %}{{ page.url }}{% endif %}">{{ page.label }}</a>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </nav>
-        </div>
+  <div class="row">
+    <div class="col-sm-12 text-center">
+      <nav>
+        <ul class="pagination">
+          {% with low_bounds=3 high_bounds=pages|length|add:'-1'%}
+            {% with low_bounds_border=low_bounds|add:'1' high_bounds_border=high_bounds|add:'-1' %}
+              {% for page in pages %}
+                {% if page_number|add:'-4' < page.number and page_number|add:'4' > page.number or page.number <= low_bounds or page.number >= high_bounds %}
+                  <li{% if page.is_current %} class="active"{% endif %}>
+                    <a href="{% if page.number == 1 %}?page=1{% else %}{{ page.url }}{% endif %}">{{ page.label }}</a>
+                  </li>
+                {% elif page.number == low_bounds_border or page.number == high_bounds_border %}
+                  <li class="disabled">
+                    <a href="javascript:void(0);">...</a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            {% endwith %}
+          {% endwith %}
+        </ul>
+      </nav>
     </div>
+  </div>
 </div>
 {% endif %}
 
