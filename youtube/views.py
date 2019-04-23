@@ -6,6 +6,7 @@ from django.utils.html import format_html
 from django.views.decorators.http import require_POST
 from django.db import transaction
 from django.db.models import Count, Q
+from django.urls import reverse
 
 from .models import Video, Channel
 from .forms import AddChannelForm
@@ -83,9 +84,15 @@ def channel_add(request):
     channel.update_channel_info()
     channel.fetch_videos()
 
-    messages.success(request, format_html(
-        'Added channel under name <b>{0}</b>',
-        channel.title))
+    messages.success(
+        request,
+        format_html(
+            'Added channel under name <b><a href="{1}">{0}</a></b>',
+            channel.title, reverse('channel', kwargs={
+                'author': channel.author,
+            }),
+        ),
+    )
 
     return redirect('admin')
 
