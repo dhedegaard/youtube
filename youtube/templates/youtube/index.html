@@ -19,6 +19,7 @@
 </h3>
 {% endif %}
 
+{% static 'youtube/missing.png' as static_missing %}
 {% paginate 72 videos %}
 {% for video in videos %}
   {% if forloop.index|divisibleby:'6' or forloop.first %}<div class="row">{% endif %}
@@ -26,7 +27,7 @@
     <a href="{{ video.url }}" target="_blank" rel="noopener noreferrer">
       <div class="thumbnail">
         <span class="duration">{{ video.duration|pretty_duration }}</span>
-        <img class="thumbnail" src="{{ video.get_thumbnail }}" title="{{ video.title }}" onerror='this.src = "{% static 'youtube/missing.png' %}"' />
+        <img class="thumbnail" src="{{ video.get_thumbnail }}" title="{{ video.title }}" onerror="if (this.src !== '{{ static_missing }}') this.src = '{{ static_missing }}';" alt="{{ video.title }}" />
       </div>
     </a>
     <div class="title nowrap text-left" title="{{ video.title }}">
