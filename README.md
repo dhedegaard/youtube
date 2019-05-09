@@ -1,15 +1,16 @@
-# Youtube #
+# Youtube
 
 [![Build Status](https://travis-ci.org/dhedegaard/youtube.svg?branch=master)](https://travis-ci.org/dhedegaard/youtube)
 [![Coverage Status](https://coveralls.io/repos/dhedegaard/youtube/badge.svg?branch=master)](https://coveralls.io/r/dhedegaard/youtube?branch=master)
 [![Requirements Status](https://requires.io/github/dhedegaard/youtube/requirements.svg?branch=master)](https://requires.io/github/dhedegaard/youtube/requirements/?branch=master)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/605a167cdcf04637be5ef0b97d1bc1f5)](https://www.codacy.com/app/dhedegaard/youtube?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=dhedegaard/youtube&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/605a167cdcf04637be5ef0b97d1bc1f5)](https://www.codacy.com/app/dhedegaard/youtube?utm_source=github.com&utm_medium=referral&utm_content=dhedegaard/youtube&utm_campaign=Badge_Grade)
+[![Total alerts](https://img.shields.io/lgtm/alerts/g/dhedegaard/youtube.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dhedegaard/youtube/alerts/)
 
 A simple Django application for aggregating youtube channels.
 
 A running example is available here: <https://ut.dhedegaard.dk/>
 
-## How to get it running in development ##
+## How to get it running in development
 
 1. Make sure you have Python 3.6+ installed.
 1. Make a new virtual environment (optional):\
@@ -31,8 +32,7 @@ A running example is available here: <https://ut.dhedegaard.dk/>
 1. Run the `update_channels` job periodically, to fetch new youtube videos:\
    `$ python manage.py update_channels`
 
-
-## For production ##
+## For production
 
 The usual:
 
