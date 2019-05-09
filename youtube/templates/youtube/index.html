@@ -27,7 +27,7 @@
     <a href="{{ video.url }}" target="_blank" rel="noopener noreferrer">
       <div class="thumbnail">
         <span class="duration">{{ video.duration|pretty_duration }}</span>
-        <img class="thumbnail" src="{{ video.get_thumbnail }}" title="{{ video.title }}" onerror="if (this.src !== '{{ static_missing }}') this.src = '{{ static_missing }}';" alt="{{ video.title }}" width="480" height="360" />
+        <img class="thumbnail" src="{{ video.get_thumbnail }}" title="{{ video.title }}" onerror="if (this.src !== '{{ static_missing }}') this.src = '{{ static_missing }}';" alt="{{ video.title }}" width="320" height="180" />
       </div>
     </a>
     <div class="title nowrap text-left" title="{{ video.title }}">
