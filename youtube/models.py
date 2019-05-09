@@ -171,7 +171,7 @@ class Video(models.Model):
     youtubeid = models.TextField(unique=True)
     uploader = models.ForeignKey(
         Channel, related_name='videos', on_delete=models.CASCADE)
-    title = models.TextField(default='')
+    title = models.TextField(default='', db_index=True)
     duration = models.IntegerField(default=0)  # in seconds
     category = models.ForeignKey(
         Category, related_name='videos', on_delete=models.CASCADE)
