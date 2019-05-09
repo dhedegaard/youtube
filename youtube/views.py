@@ -65,6 +65,7 @@ def admin(request):
         'form': form,
         'page': 'admin',
         'full_url': request.build_absolute_uri(request.get_full_path()),
+        'hide_search': True,
     })
 
 
