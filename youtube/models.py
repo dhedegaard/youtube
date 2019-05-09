@@ -190,6 +190,9 @@ class Video(models.Model):
 
     class Meta:
         ordering = ['-uploaded']
+        indexes = [
+            models.Index(fields=['uploader', 'deleted', '-uploaded'])
+        ]
 
     def get_thumbnail(self, quality='hqdefault'):
         return 'https://i.ytimg.com/vi/%(youtubeid)s/%(quality)s.jpg' % {
