@@ -13,19 +13,13 @@ from .forms import AddChannelForm
 
 
 def index(request):
-    videos = (
-        Video.objects.
-        filter(uploader__hidden=False).
-        exclude_deleted().
-        prefetch_related('uploader'))
-
-    # Text search.
-    q = request.GET.get('q', '')
-    if q:
-        videos = videos.filter(title__icontains=q)
-
     return render(request, 'youtube/index.html', {
-        'videos': videos,
+        'videos': (
+            Video.objects.
+            filter(uploader__hidden=False).
+            exclude_deleted().
+            text_search(request.GET.get('q', '')).
+            prefetch_related('uploader')),
         'full_url': request.build_absolute_uri(request.get_full_path()),
     })
 
@@ -41,16 +35,14 @@ def channel(request, author):
     # Fetch the channel, or 404.
     channel = get_object_or_404(qs.filter(
         Q(Q(author=author) | Q(channelid=author))))
-    videos = channel.videos.exclude_deleted()
-
-    # Text search.
-    q = request.GET.get('q', '')
-    if q:
-        videos = videos.filter(title__icontains=q)
 
     # Render and return.
     return render(request, 'youtube/index.html', {
-        'videos': videos,
+        'videos': (
+            channel.videos.
+            exclude_deleted().
+            text_search(request.GET.get('q', ''))
+        ),
         'channel': channel,
         'full_url': request.build_absolute_uri(request.get_full_path()),
     })

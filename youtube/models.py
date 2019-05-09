@@ -138,6 +138,11 @@ class VideoQuerySet(models.QuerySet):
     def exclude_deleted(self):
         return self.exclude(deleted=True)
 
+    def text_search(self, search_query):
+        if search_query:
+            return self.filter(title__icontains=search_query)
+        return self
+
     def create_or_update(self, channel, data):
         '''
         Creates or updates a `Video` object with the data given, for the
