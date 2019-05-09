@@ -194,7 +194,7 @@ class Video(models.Model):
             models.Index(fields=['uploader', 'deleted', '-uploaded'])
         ]
 
-    def get_thumbnail(self, quality='hqdefault'):
+    def get_thumbnail(self, quality='mqdefault'):
         return 'https://i.ytimg.com/vi/%(youtubeid)s/%(quality)s.jpg' % {
             'youtubeid': self.youtubeid,
             'quality': quality,
