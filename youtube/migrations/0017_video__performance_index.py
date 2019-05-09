@@ -12,6 +12,8 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddIndex(
             model_name='video',
-            index=models.Index(fields=['uploader', 'deleted', '-uploaded'], name='youtube_vid_uploade_bb5325_idx'),
+            index=models.Index(
+                fields=['uploader', 'deleted', '-uploaded'],
+                name='youtube_vid_uploade_bb5325_idx'),
         ),
     ]
