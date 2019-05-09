@@ -21,6 +21,14 @@ class IndexTest(TestCase):
         self.assertEqual(resp.status_code, 200)
         self.assertTemplateUsed(resp, 'youtube/index.html')
 
+    def test__get__self(self):
+        resp = self.client.get(reverse('index'), data={
+            'q': 'some search query',
+        })
+
+        self.assertEqual(resp.status_code, 200)
+        self.assertTemplateUsed(resp, 'youtube/index.html')
+
 
 class ChannelTest(TestCase):
     def setUp(self):
