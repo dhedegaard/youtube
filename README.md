@@ -5,6 +5,7 @@
 [![Requirements Status](https://requires.io/github/dhedegaard/youtube/requirements.svg?branch=master)](https://requires.io/github/dhedegaard/youtube/requirements/?branch=master)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/605a167cdcf04637be5ef0b97d1bc1f5)](https://www.codacy.com/app/dhedegaard/youtube?utm_source=github.com&utm_medium=referral&utm_content=dhedegaard/youtube&utm_campaign=Badge_Grade)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/dhedegaard/youtube.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dhedegaard/youtube/alerts/)
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/dhedegaard/youtube.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/dhedegaard/youtube/context:python)
 
 A simple Django application for aggregating youtube channels.
 
