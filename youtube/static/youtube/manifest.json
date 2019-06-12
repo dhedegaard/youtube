@@ -1,8 +1,10 @@
 {
     "name": "New youtube videos",
     "short_name": "Youtube",
+    "start_url": ".",
     "display": "standalone",
     "background_color": "#212121",
+    "description": "Showing the newest youtube videos from various channels.",
     "icons": [
         {
             "src": "/static/favicon.png",
