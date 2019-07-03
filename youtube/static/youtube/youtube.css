@@ -1,80 +1,87 @@
 .item {
-    padding: 5px;
-    margin-bottom: 10px;
+  padding: 5px;
+  margin-bottom: 10px;
 }
 
 div.thumbnail {
-    position: relative;
-    margin-bottom: 0;
-    padding: 0;
+  position: relative;
+  margin-bottom: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100%;
+  padding-top: calc(56.25% - 1px);
+  background-color: #eee;
 }
 
 div.thumbnail img {
-    max-width: 100%;
-    width: 100%;
-    padding: 0;
-    margin: auto;
-    border: 0;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border: 0;
 }
 
 div.thumbnail .duration {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    background-color: black;
-    color: white;
-    opacity: 0.8;
-    border-radius: 3px;
-    padding: 3px;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: black;
+  color: white;
+  opacity: 0.8;
+  border-radius: 3px;
+  padding: 3px;
 }
 
 div.item .uploader {
-    font-size: small;
-    margin: 0 1px;
+  font-size: small;
+  margin: 0 1px;
 }
 
 div.item .uploaded {
-    margin: 0 1px;
-    font-size: 80%;
+  margin: 0 1px;
+  font-size: 80%;
 }
 
 .title {
-    padding: 1px;
-    font-weight: bold;
+  padding: 1px;
+  font-weight: bold;
 }
 
 .nowrap {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .add-channel-form {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 .inline {
-    display: inline;
+  display: inline;
 }
 
 .hidden-channel {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 .channel-thumbnail {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .navbar-brand img {
-    margin-top: -2px;
-    display: inline-block;
+  margin-top: -2px;
+  display: inline-block;
 }
 
 .uploader img {
-    max-height: 16px;
+  max-height: 16px;
 }
 
 .thumbnail-header {
-    max-height: 28px;
+  max-height: 28px;
 }
