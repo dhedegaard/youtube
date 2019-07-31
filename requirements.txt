@@ -4,4 +4,4 @@ requests==2.22.0
 django-el-pagination==3.2.4
 isodate==0.6.0
 mock==3.0.5
-pytz==2019.1
+pytz==2019.2
