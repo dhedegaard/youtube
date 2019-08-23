@@ -48,6 +48,17 @@ div.item .uploaded {
 .title {
   padding: 1px;
   font-weight: bold;
+  display: block;
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal !important;
+  font-size: 80%;
+  max-width: 100%;
+  height: 3em;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  -moz-box-orient: vertical;
 }
 
 .nowrap {
