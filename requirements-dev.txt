@@ -1,4 +1,4 @@
 coveralls==1.11.1
 codecov==2.0.15
 flake8==3.7.9
-freezegun==0.3.14
+freezegun==0.3.15
