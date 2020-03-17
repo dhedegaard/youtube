@@ -51,7 +51,12 @@ def fetch_videocategories(categoryids):
             'key': settings.YOUTUBE_API_KEY,
         })
     resp.raise_for_status()
-    return resp.json()['items']
+    data = resp.json()
+    if 'items' in data:
+        return data['items']
+    else:
+        # Happens for specific ids, at specific times.
+        return []
 
 
 def fetch_channel_info(channelid, parts=('snippet', 'contentDetails')):

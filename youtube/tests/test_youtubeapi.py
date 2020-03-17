@@ -111,6 +111,25 @@ class FetchVideocategoriesTestCase(TestCase):
         self.assertTrue(resp_mock.raise_for_status.called)
         self.assertTrue(resp_mock.json.called)
 
+    @mock.patch('youtube.youtubeapi.requests')
+    def test__empty_data(self, requests_patch):
+        resp_mock = mock.Mock()
+        resp_mock.json.return_value = {}
+        requests_patch.get.return_value = resp_mock
+
+        # Empty list, since the JSON response is an empty object.
+        self.assertEqual(fetch_videocategories([1, 2, 3]), [])
+
+        requests_patch.get.assert_called_with(
+            'https://www.googleapis.com/youtube/v3/videoCategories',
+            params={
+                'part': 'snippet',
+                'id': '1,2,3',
+                'key': settings.YOUTUBE_API_KEY,
+            })
+        self.assertTrue(resp_mock.raise_for_status.called)
+        self.assertTrue(resp_mock.json.called)
+
 
 class FetchChannelInfoTestCase(TestCase):
 
