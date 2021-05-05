@@ -149,4 +149,4 @@ LOGIN_URL = '/login/'
 
 # Put your youtube API key here, it will be used in all API calls to the
 # Youtube API.
-YOUTUBE_API_KEY = 'AIzaSyAgGZayue5qJwuLrFzSnMeHK2YWc8ySTQ8'
+YOUTUBE_API_KEY = os.environ['YOUTUBE_API_KEY']
