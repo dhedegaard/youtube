@@ -5,3 +5,4 @@ django-el-pagination==3.2.4
 isodate==0.6.0
 mock==3.0.5
 pytz==2019.3
+dj-database-url==0.5.0

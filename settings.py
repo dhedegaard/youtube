@@ -22,10 +22,11 @@ BASE_DIR = os.path.dirname(__file__)
 SECRET_KEY = '%vuf@d-=$+a7i$smt(t^ty3eqb^1sk*&qcfxxp4+(a2zor*_^e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = 'PRODUCTION' not in os.environ
 
 ALLOWED_HOSTS = []
-
+if 'ALLOWED_HOSTS' in os.environ:
+    ALLOWED_HOSTS = os.environ['ALLOWED_HOSTS'].split(',')
 
 # Application definition
 
@@ -66,6 +67,15 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+# If there's a DATABASE_URL environ variable, expect it to be a postgres URL.
+if 'DATABASE_URL' in os.environ:
+    import dj_database_url
+    DATABASES['default'] = dj_database_url.config(
+        default=os.environ['DATABASE_URL'],
+        conn_max_age=600,
+        ssl_require=True,
+    )
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
@@ -139,4 +149,4 @@ LOGIN_URL = '/login/'
 
 # Put your youtube API key here, it will be used in all API calls to the
 # Youtube API.
-YOUTUBE_API_KEY = 'PUT_YOUTUBE_API_KEY_HERE'
+YOUTUBE_API_KEY = 'AIzaSyAgGZayue5qJwuLrFzSnMeHK2YWc8ySTQ8'
