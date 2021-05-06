@@ -12,4 +12,4 @@ RUN python manage.py test && \
   python manage.py collectstatic --noinput -c
 
 CMD python manage.py migrate && \
-  gunicorn youtube.wsgi
+  gunicorn wsgi
